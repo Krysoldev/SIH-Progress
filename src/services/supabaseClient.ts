@@ -218,6 +218,31 @@ export async function syncProjectsToSupabase(projects: Project[]): Promise<{
   }
 }
 
+export async function fetchTableCountsFromSupabase(): Promise<{
+  projectsCount: number;
+  alertsCount: number;
+  milestonesCount: number;
+  error?: string;
+}> {
+  const client = getSupabase();
+  if (!client) {
+    return { projectsCount: 0, alertsCount: 0, milestonesCount: 0, error: 'Supabase client not initialized' };
+  }
+  try {
+    const { count: pCount } = await client.from('projects').select('*', { count: 'exact', head: true });
+    const { count: aCount } = await client.from('alerts').select('*', { count: 'exact', head: true });
+    const { count: mCount } = await client.from('milestones').select('*', { count: 'exact', head: true });
+    return {
+      projectsCount: pCount || 0,
+      alertsCount: aCount || 0,
+      milestonesCount: mCount || 0,
+    };
+  } catch (err: any) {
+    return { projectsCount: 0, alertsCount: 0, milestonesCount: 0, error: err.message };
+  }
+}
+
+
 export const SUPABASE_SQL_SCHEMA = `-- ============================================================
 -- MASTER DEV AURUM — SUPABASE POSTGRESQL SCHEMA
 -- Execute in Supabase SQL Editor to initialize tables

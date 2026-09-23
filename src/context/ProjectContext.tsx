@@ -19,8 +19,10 @@ interface ProjectContextType {
   acknowledgeAlert: (projectId: string, alertId: string) => Promise<void>;
   createProject: (project: Project) => Promise<void>;
   updateProject: (project: Project) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
   resetToDefaults: () => void;
 }
+
 
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -83,6 +85,17 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setProjects(prev => prev.map(p => (p.id === saved.id ? saved : p)));
   };
 
+  const deleteProject = async (id: string) => {
+    await ProjectService.deleteProject(id);
+    setProjects(prev => {
+      const remaining = prev.filter(p => p.id !== id);
+      if (selectedProjectId === id && remaining.length > 0) {
+        setSelectedProjectIdState(remaining[0].id);
+      }
+      return remaining;
+    });
+  };
+
   const resetToDefaults = () => {
     ProjectService.resetToDefaultData();
     loadProjects();
@@ -108,11 +121,13 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
         acknowledgeAlert,
         createProject,
         updateProject,
+        deleteProject,
         resetToDefaults,
       }}
     >
       {children}
     </ProjectContext.Provider>
+
   );
 };
 

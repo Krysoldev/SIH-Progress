@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   ChevronRight,
+  Server,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useProjects } from '../../context/ProjectContext';
@@ -28,7 +29,8 @@ export type ScreenId =
   | 'map'
   | 'reports'
   | 'simulation'
-  | 'settings';
+  | 'settings'
+  | 'admin';
 
 interface AurumSidebarProps {
   currentScreen: ScreenId;
@@ -57,7 +59,9 @@ export const AurumSidebar: React.FC<AurumSidebarProps> = ({
     { id: 'map', label: 'GIS MAP', icon: <MapPin size={17} /> },
     { id: 'reports', label: 'REPORTS', icon: <FileText size={17} /> },
     { id: 'simulation', label: 'SIMULATION', icon: <SlidersHorizontal size={17} /> },
+    { id: 'admin', label: 'ADMIN CONSOLE', icon: <Server size={17} /> },
   ];
+
 
   const handleItemClick = (screen: ScreenId) => {
     onNavigate(screen);

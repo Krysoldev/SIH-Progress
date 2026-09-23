@@ -19,6 +19,7 @@ import { MapPage } from './pages/MapPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { SimulationPage } from './pages/SimulationPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { AdminPage } from './pages/AdminPage';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -37,6 +38,7 @@ const AppContent: React.FC = () => {
       'reports',
       'simulation',
       'settings',
+      'admin',
     ];
     return validScreens.includes(hash) ? hash : 'overview';
   });
@@ -85,6 +87,8 @@ const AppContent: React.FC = () => {
         return <SimulationPage onNavigate={handleNavigate} />;
       case 'settings':
         return <SettingsPage />;
+      case 'admin':
+        return <AdminPage onNavigate={handleNavigate} />;
       default:
         return <DashboardPage onNavigate={handleNavigate} />;
     }

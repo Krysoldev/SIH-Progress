@@ -189,8 +189,28 @@ export class ProjectService {
     return updatedProject;
   }
 
+  static async deleteProject(id: string): Promise<boolean> {
+
+    const projects = this.loadLocalProjects();
+    const updated = projects.filter(p => p.id !== id);
+    this.saveLocalProjects(updated);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('projects').delete().eq('id', id);
+        await supabase.from('alerts').delete().eq('project_id', id);
+        await supabase.from('milestones').delete().eq('project_id', id);
+      } catch (e) {
+        console.warn('Supabase project delete failed:', e);
+      }
+    }
+
+    return true;
+  }
+
   static resetToDefaultData(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(SYNTHETIC_PROJECTS));
   }
 }
+
 
