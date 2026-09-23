@@ -20,8 +20,9 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-fade-in-up">
       {/* Title Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-silver/10 pb-5">
         <div>
           <span className="mono-label">SPATIAL INFRASTRUCTURE TELEMETRY</span>

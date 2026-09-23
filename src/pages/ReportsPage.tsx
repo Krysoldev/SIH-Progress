@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { useProjects } from '../context/ProjectContext';
 import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../context/NotificationContext';
 import { AurumCard } from '../components/common/AurumCard';
 import { AurumButton } from '../components/common/AurumButton';
 import { AurumBadge } from '../components/common/AurumBadge';
 import { FileText, Download, Printer, CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
 
+interface ReportsPageProps {
+  onNavigate?: (screen: any) => void;
+}
+
 export const ReportsPage: React.FC<ReportsPageProps> = () => {
   const { projects, selectedProject, setSelectedProject, summary } = useProjects();
   const { user } = useAuth();
+  const { notify } = useNotification();
 
   const [reportType, setReportType] = useState<'executive' | 'risk' | 'financial'>('executive');
   const [scope, setScope] = useState<'single' | 'portfolio'>('single');
@@ -16,12 +22,14 @@ export const ReportsPage: React.FC<ReportsPageProps> = () => {
   const p = selectedProject;
 
   const handleDownload = () => {
+    notify('info', 'Report Generation', 'Preparing print/PDF preview for export.');
     window.print();
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-fade-in-up">
       {/* Editorial Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-silver/10 pb-5">
         <div>
           <span className="mono-label">AUDIT & EXECUTIVE REPORT GENERATOR</span>

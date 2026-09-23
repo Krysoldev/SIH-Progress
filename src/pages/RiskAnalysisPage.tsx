@@ -52,8 +52,9 @@ export const RiskAnalysisPage: React.FC<RiskAnalysisPageProps> = ({ onNavigate }
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-200">
+    <div className="space-y-8 animate-fade-in-up">
       {/* Editorial Header */}
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-silver/10 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1.5">

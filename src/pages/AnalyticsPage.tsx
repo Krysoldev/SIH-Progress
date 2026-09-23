@@ -48,8 +48,9 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ onNavigate }) => {
   }));
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-200">
+    <div className="space-y-8 animate-fade-in-up">
       {/* Title Header */}
+
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-silver/10 pb-5">
         <div>
           <span className="mono-label">PORTFOLIO CAPITAL ANALYTICS</span>

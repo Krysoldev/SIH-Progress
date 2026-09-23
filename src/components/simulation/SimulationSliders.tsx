@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { Project } from '../../types/project';
 import { SimulationEngine, SimulationParameters, SimulationOutcome } from '../../services/simulationEngine';
+import { useNotification } from '../../context/NotificationContext';
+import { useProjects } from '../../context/ProjectContext';
 import { AurumCard } from '../common/AurumCard';
 import { AurumBadge } from '../common/AurumBadge';
-import { RotateCcw, Zap, TrendingUp, AlertTriangle } from 'lucide-react';
+import { AurumButton } from '../common/AurumButton';
+import { RotateCcw, Zap, TrendingUp, AlertTriangle, BookmarkCheck, SlidersHorizontal } from 'lucide-react';
 
 interface SimulationSlidersProps {
   project: Project;
 }
 
 export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project }) => {
+  const { notify } = useNotification();
+  const { updateProject } = useProjects();
+
   const [params, setParams] = useState<SimulationParameters>({
     progressRateAdjustment: 0,
     expenditureRateAdjustment: 0,
@@ -28,6 +34,7 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
           scheduleRecoveryBuffer: 3,
           materialInflationFactor: 0,
         });
+        notify('info', 'Fast-Track Preset Applied', 'Accelerating physical velocity by +18% with +3 month compression.');
         break;
       case 'inflation':
         setParams({
@@ -36,6 +43,7 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
           scheduleRecoveryBuffer: 0,
           materialInflationFactor: 12,
         });
+        notify('warning', 'Inflation Shock Preset Applied', 'Simulating +12% commodity price escalation and +25% burn.');
         break;
       case 'stabilization':
         setParams({
@@ -44,6 +52,7 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
           scheduleRecoveryBuffer: 1.5,
           materialInflationFactor: 2,
         });
+        notify('info', 'Conservative Recovery Applied', 'Balancing capital preservation with steady critical path progress.');
         break;
       case 'reset':
       default:
@@ -53,14 +62,41 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
           scheduleRecoveryBuffer: 0,
           materialInflationFactor: 0,
         });
+        notify('info', 'Baseline Restored', 'Model assumptions reset to project baseline.');
         break;
     }
+  };
+
+  const handleApplyToProject = async () => {
+    const updated: Project = {
+      ...project,
+      riskScore: outcome.simulatedRiskScore,
+      riskBreakdown: {
+        ...project.riskBreakdown,
+        overallScore: outcome.simulatedRiskScore,
+        riskLevel: outcome.newRiskLevel,
+      },
+      evm: {
+        ...project.evm,
+        cpi: outcome.simulatedCpi,
+        spi: outcome.simulatedSpi,
+        eac: Math.round(outcome.simulatedCost),
+      },
+      prediction: {
+        ...project.prediction,
+        predictedCostOverrun: Math.max(0, Math.round(outcome.simulatedCost - project.plannedCost)),
+        predictedTimeOverrun: Math.max(0, Math.round(project.prediction.predictedTimeOverrun + outcome.scheduleDeltaMonths)),
+      },
+    };
+
+    await updateProject(updated);
+    notify('success', 'Scenario Applied as Target Baseline', `Updated project EAC to ₹${outcome.simulatedCost.toFixed(1)} Cr and risk score to ${outcome.simulatedRiskScore}/100.`);
   };
 
   return (
     <div className="space-y-6">
       {/* Preset Action Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-obsidian-2 border border-silver/10">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-obsidian-2 border border-silver/10 hover-glow-card">
         <div>
           <span className="mono-label">WHAT-IF SCENARIO SIMULATOR</span>
           <h3 className="font-display text-base text-bone mt-0.5">
@@ -71,21 +107,21 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => applyPreset('acceleration')}
-            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-silver-bright flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-silver-bright flex items-center gap-1.5 transition-all hover:-translate-y-0.5"
           >
             <Zap size={13} className="text-amber-300" />
             <span>Fast-Track Compression</span>
           </button>
           <button
             onClick={() => applyPreset('inflation')}
-            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-bone-muted hover:text-bone flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-bone-muted hover:text-bone flex items-center gap-1.5 transition-all hover:-translate-y-0.5"
           >
             <TrendingUp size={13} className="text-red-300" />
             <span>Commodity Inflation Shock</span>
           </button>
           <button
             onClick={() => applyPreset('stabilization')}
-            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-bone-muted hover:text-bone flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 rounded-full bg-obsidian-3 hover:bg-obsidian-4 border border-silver/15 text-xs font-mono text-bone-muted hover:text-bone flex items-center gap-1.5 transition-all hover:-translate-y-0.5"
           >
             <span>Conservative Recovery</span>
           </button>
@@ -103,7 +139,7 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
       {/* Main Grid: Controls on Left, Dynamic Outcome on Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Controls Column */}
-        <AurumCard variant="showcase" className="lg:col-span-6 p-6 space-y-6">
+        <AurumCard variant="showcase" className="lg:col-span-6 p-6 space-y-6 hover-glow-card">
           <div className="border-b border-silver/10 pb-3">
             <span className="mono-label">MODEL PARAMETERS</span>
             <h4 className="font-display text-lg text-bone">Intervention Assumptions</h4>
@@ -207,7 +243,7 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
         </AurumCard>
 
         {/* Dynamic Outcome Column */}
-        <AurumCard variant="showcase" className="lg:col-span-6 p-6 flex flex-col justify-between space-y-6">
+        <AurumCard variant="showcase" className="lg:col-span-6 p-6 flex flex-col justify-between space-y-6 hover-glow-card">
           <div>
             <div className="flex items-center justify-between border-b border-silver/10 pb-3">
               <div>
@@ -295,12 +331,21 @@ export const SimulationSliders: React.FC<SimulationSlidersProps> = ({ project })
             </div>
           </div>
 
-          {/* Prototype Disclaimer */}
-          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-obsidian-4/60 text-bone-muted text-[0.68rem] font-mono border border-silver/5">
-            <AlertTriangle size={14} className="text-amber-400 shrink-0" />
-            <span>
-              PROTOTYPE SIMULATION ENGINE: Computations model non-linear schedule compression and cost elasticity assumptions.
-            </span>
+          {/* Action to Apply Scenario */}
+          <div className="pt-2 border-t border-silver/10 flex items-center justify-between gap-3">
+            <div className="text-[0.68rem] font-mono text-bone-muted flex items-center gap-1.5">
+              <AlertTriangle size={13} className="text-amber-400 shrink-0" />
+              <span>Non-linear compression model active</span>
+            </div>
+
+            <AurumButton
+              variant="primary"
+              size="sm"
+              onClick={handleApplyToProject}
+              icon={<BookmarkCheck size={14} />}
+            >
+              COMMIT SCENARIO TARGETS
+            </AurumButton>
           </div>
         </AurumCard>
       </div>

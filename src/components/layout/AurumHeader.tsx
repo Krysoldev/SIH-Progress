@@ -11,6 +11,7 @@ import {
 import { useProjects } from '../../context/ProjectContext';
 import { useAuth } from '../../context/AuthContext';
 import { AurumBadge } from '../common/AurumBadge';
+import { AccountModal } from './AccountModal';
 
 interface AurumHeaderProps {
   onToggleMobile: () => void;
@@ -24,8 +25,10 @@ export const AurumHeader: React.FC<AurumHeaderProps> = ({
   onNavigateToCopilot,
 }) => {
   const { projects, selectedProject, setSelectedProject, searchQuery, setSearchQuery, summary } = useProjects();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-obsidian-1/90 backdrop-blur-md border-b border-silver/10 px-4 md:px-8 flex items-center justify-between gap-4">
@@ -144,15 +147,37 @@ export const AurumHeader: React.FC<AurumHeaderProps> = ({
           )}
         </button>
 
-        {/* Role Pill */}
+        {/* Role & Profile Button */}
         {user && (
-          <div className="hidden xl:flex items-center gap-2 pl-2 border-l border-silver/10">
-            <span className="font-mono text-[0.62rem] px-2 py-0.5 rounded-full bg-obsidian-3 border border-silver/15 text-silver tracking-wider uppercase">
-              {user.role.replace(/_/g, ' ')}
-            </span>
+          <div className="flex items-center gap-2 pl-2 border-l border-silver/10">
+            <button
+              onClick={() => setIsAccountModalOpen(true)}
+              title="Manage Account Identity & Clearances"
+              className="flex items-center gap-2 p-1.5 md:px-2.5 md:py-1 rounded-full bg-obsidian-2 hover:bg-obsidian-3 border border-silver/15 hover:border-silver/30 transition-all text-left group hover:shadow-silver-glow"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-silver-bright to-silver flex items-center justify-center text-[0.62rem] font-bold font-mono text-obsidian-0">
+                {user.avatarInitials}
+              </div>
+              <div className="hidden lg:block">
+                <p className="text-[0.72rem] font-medium text-bone leading-tight group-hover:text-silver-bright truncate max-w-[110px]">
+                  {user.name.split(' ')[0]}
+                </p>
+                <p className="font-mono text-[0.58rem] text-silver-dark uppercase tracking-wider">
+                  {user.role.split('_')[0]}
+                </p>
+              </div>
+            </button>
           </div>
         )}
       </div>
+
+      {/* Account Profile & Clearance Modal */}
+      <AccountModal
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+        onLogout={logout}
+      />
     </header>
   );
 };
+

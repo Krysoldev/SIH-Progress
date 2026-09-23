@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AurumSidebar, ScreenId } from './AurumSidebar';
 import { AurumHeader } from './AurumHeader';
 import { AurumAtmosphere } from '../common/AurumAtmosphere';
+import { AurumToastContainer } from '../common/AurumToast';
 
 interface AurumShellProps {
   currentScreen: ScreenId;
@@ -20,6 +21,9 @@ export const AurumShell: React.FC<AurumShellProps> = ({
     <div className="relative min-h-screen bg-obsidian-0 text-bone flex flex-col font-sans">
       {/* Aurum Cinematic Atmosphere: Drifting silver & steel glows + SVG noise overlay */}
       <AurumAtmosphere />
+
+      {/* Floating Animated Feedback Toasts */}
+      <AurumToastContainer />
 
       {/* Persistent Left Sidebar */}
       <AurumSidebar
@@ -59,3 +63,4 @@ export const AurumShell: React.FC<AurumShellProps> = ({
     </div>
   );
 };
+

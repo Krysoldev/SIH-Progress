@@ -114,7 +114,83 @@ export class ProjectService {
     return alerts;
   }
 
+  static async createProject(newProject: Project): Promise<Project> {
+    const projects = this.loadLocalProjects();
+    const updated = [newProject, ...projects];
+    this.saveLocalProjects(updated);
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('projects').upsert({
+          id: newProject.id,
+          code: newProject.code,
+          name: newProject.name,
+          location: newProject.location,
+          state: newProject.state,
+          lat: newProject.lat,
+          lng: newProject.lng,
+          planned_cost: newProject.plannedCost,
+          current_expenditure: newProject.currentExpenditure,
+          physical_progress: newProject.physicalProgress,
+          planned_duration: newProject.plannedDuration,
+          elapsed_duration: newProject.elapsedDuration,
+          status: newProject.status,
+          risk_score: newProject.riskScore,
+          category: newProject.category,
+          contractor: newProject.contractor,
+          manager: newProject.manager,
+          description: newProject.description,
+          last_update: new Date().toISOString(),
+        });
+      } catch (e) {
+        console.warn('Supabase project sync on create failed:', e);
+      }
+    }
+
+    return newProject;
+  }
+
+  static async updateProject(updatedProject: Project): Promise<Project> {
+    const projects = this.loadLocalProjects();
+    const index = projects.findIndex(p => p.id === updatedProject.id);
+    if (index !== -1) {
+      projects[index] = updatedProject;
+      this.saveLocalProjects(projects);
+    }
+
+    if (isSupabaseConfigured && supabase) {
+      try {
+        await supabase.from('projects').upsert({
+          id: updatedProject.id,
+          code: updatedProject.code,
+          name: updatedProject.name,
+          location: updatedProject.location,
+          state: updatedProject.state,
+          lat: updatedProject.lat,
+          lng: updatedProject.lng,
+          planned_cost: updatedProject.plannedCost,
+          current_expenditure: updatedProject.currentExpenditure,
+          physical_progress: updatedProject.physicalProgress,
+          planned_duration: updatedProject.plannedDuration,
+          elapsed_duration: updatedProject.elapsedDuration,
+          status: updatedProject.status,
+          risk_score: updatedProject.riskScore,
+          category: updatedProject.category,
+          contractor: updatedProject.contractor,
+          manager: updatedProject.manager,
+          description: updatedProject.description,
+          last_update: new Date().toISOString(),
+        });
+      } catch (e) {
+        console.warn('Supabase project sync on update failed:', e);
+      }
+    }
+
+    return updatedProject;
+  }
+
   static resetToDefaultData(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(SYNTHETIC_PROJECTS));
   }
 }
+

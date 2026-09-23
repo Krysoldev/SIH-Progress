@@ -254,3 +254,147 @@
 .leaflet-popup-close-button {
   color: #8a94a4 !important;
 }
+
+/* ============================================================
+   AURUM MOTION & ANIMATION SYSTEM
+   ============================================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(228, 232, 238, 0.08), inset 0 0 10px rgba(228, 232, 238, 0.04);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(228, 232, 238, 0.22), inset 0 0 15px rgba(228, 232, 238, 0.12);
+  }
+}
+
+@keyframes criticalPulse {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.35);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.7);
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-critical-pulse {
+  animation: criticalPulse 2s ease-in-out infinite;
+}
+
+.animate-radar {
+  animation: radarSweep 6s linear infinite;
+  transform-origin: center center;
+}
+
+/* Shimmer Highlight across metallic badges and buttons */
+.shimmer-badge {
+  background: linear-gradient(
+    90deg,
+    rgba(228, 232, 238, 0.05) 0%,
+    rgba(228, 232, 238, 0.22) 50%,
+    rgba(228, 232, 238, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
+}
+
+/* Interactive Card Hover Lift & Glow */
+.hover-glow-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+
+.hover-glow-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(228, 232, 238, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(184, 192, 204, 0.12);
+}
+
+/* Smooth Progress Bar transitions */
+.progress-fill-animated {
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProjectProvider } from './context/ProjectContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { AurumShell } from './components/layout/AurumShell';
+
 import { ScreenId } from './components/layout/AurumSidebar';
 
 // Pages
@@ -98,9 +100,12 @@ const AppContent: React.FC = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <ProjectProvider>
-        <AppContent />
-      </ProjectProvider>
+      <NotificationProvider>
+        <ProjectProvider>
+          <AppContent />
+        </ProjectProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }
+

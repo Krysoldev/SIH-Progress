@@ -12,8 +12,9 @@ export const AICopilotPage: React.FC<AICopilotPageProps> = ({ onNavigate }) => {
   const { selectedProject, projects } = useProjects();
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-fade-in-up">
       {/* Editorial Header */}
+
       <div className="border-b border-silver/10 pb-4">
         <div className="flex items-center gap-2 mb-1">
           <span className="mono-label">NATURAL LANGUAGE INTELLIGENCE CONSOLE</span>

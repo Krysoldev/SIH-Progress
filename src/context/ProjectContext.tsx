@@ -17,8 +17,11 @@ interface ProjectContextType {
   refreshProjects: () => Promise<void>;
   updateMilestone: (projectId: string, milestoneId: string, status: MilestoneStatus) => Promise<void>;
   acknowledgeAlert: (projectId: string, alertId: string) => Promise<void>;
+  createProject: (project: Project) => Promise<void>;
+  updateProject: (project: Project) => Promise<void>;
   resetToDefaults: () => void;
 }
+
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
@@ -69,6 +72,17 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
+  const createProject = async (newProject: Project) => {
+    const created = await ProjectService.createProject(newProject);
+    setProjects(prev => [created, ...prev]);
+    setSelectedProjectIdState(created.id);
+  };
+
+  const updateProject = async (updatedProject: Project) => {
+    const saved = await ProjectService.updateProject(updatedProject);
+    setProjects(prev => prev.map(p => (p.id === saved.id ? saved : p)));
+  };
+
   const resetToDefaults = () => {
     ProjectService.resetToDefaultData();
     loadProjects();
@@ -92,6 +106,8 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
         refreshProjects: loadProjects,
         updateMilestone,
         acknowledgeAlert,
+        createProject,
+        updateProject,
         resetToDefaults,
       }}
     >
@@ -99,6 +115,7 @@ export const ProjectProvider: React.FC<{ children: React.ReactNode }> = ({ child
     </ProjectContext.Provider>
   );
 };
+
 
 export const useProjects = () => {
   const context = useContext(ProjectContext);
