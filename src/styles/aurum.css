@@ -1,0 +1,256 @@
+/* ============================================================
+   AURUM DESIGN SYSTEM — CORE TOKENS & STYLES
+   Visual Identity: Dark Cinematic Editorial + Premium Project Intelligence Console
+   ============================================================ */
+
+:root {
+  /* Obsidian Canvas */
+  --obsidian-0: #050609;
+  --obsidian-1: #0a0c10;
+  --obsidian-2: #101318;
+  --obsidian-3: #171b22;
+  --obsidian-4: #1f242c;
+  --obsidian-5: #2a3038;
+
+  /* Silver Signal System */
+  --silver: #b8c0cc;
+  --silver-bright: #e4e8ee;
+  --silver-pure: #ffffff;
+  --silver-deep: #8a94a4;
+  --silver-dark: #5e6675;
+
+  /* Text Typography */
+  --bone: #e8ecf2;
+  --bone-2: #cdd4de;
+  --bone-muted: #8a94a4;
+  --bone-faint: #5e6675;
+
+  /* Supporting */
+  --steel: #6b7788;
+  --graphite: #3d434e;
+
+  /* Gradients */
+  --grad-silver: linear-gradient(135deg, #e4e8ee 0%, #b8c0cc 40%, #8a94a4 75%, #5e6675 100%);
+  --grad-silver-bright: linear-gradient(135deg, #ffffff 0%, #e4e8ee 25%, #b8c0cc 55%, #8a94a4 100%);
+  --grad-surface: linear-gradient(135deg, rgba(23, 27, 34, 0.75) 0%, rgba(16, 19, 24, 0.85) 100%);
+  --grad-surface-hover: linear-gradient(135deg, rgba(31, 36, 44, 0.85) 0%, rgba(23, 27, 34, 0.9) 100%);
+
+  /* Shadows */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-deep: 0 30px 70px rgba(0, 0, 0, 0.7);
+  --shadow-silver: 0 20px 60px rgba(184, 192, 204, 0.15);
+  --shadow-metallic: inset 0 1px 1px 0 rgba(228, 232, 238, 0.12), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.6);
+
+  /* Borders */
+  --border-silver-subtle: 1px solid rgba(184, 192, 204, 0.12);
+  --border-silver-active: 1px solid rgba(228, 232, 238, 0.3);
+  --border-silver-glow: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Atmospheric Ambient Drift Glows */
+@keyframes driftTopRight {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate(-30px, 40px) scale(1.15);
+    opacity: 0.18;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.12;
+  }
+}
+
+@keyframes driftBottomLeft {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translate(40px, -30px) scale(1.2);
+    opacity: 0.14;
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.08;
+  }
+}
+
+.aurum-glow-tr {
+  position: fixed;
+  top: -120px;
+  right: -100px;
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184, 192, 204, 0.35) 0%, rgba(184, 192, 204, 0.05) 50%, transparent 75%);
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+  animation: driftTopRight 22s ease-in-out infinite;
+}
+
+.aurum-glow-bl {
+  position: fixed;
+  bottom: -150px;
+  left: -120px;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(107, 119, 136, 0.3) 0%, rgba(107, 119, 136, 0.05) 50%, transparent 75%);
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+  animation: driftBottomLeft 26s ease-in-out infinite;
+}
+
+/* Subtle Fixed Micro-noise Grain */
+.aurum-grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Reusable Aurum Surface Card */
+.aurum-card {
+  background: var(--grad-surface);
+  border: var(--border-silver-subtle);
+  box-shadow: var(--shadow-soft), var(--shadow-metallic);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.aurum-card:hover {
+  border-color: rgba(184, 192, 204, 0.24);
+  box-shadow: var(--shadow-soft), var(--shadow-metallic), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.aurum-card-showcase {
+  border-radius: 24px;
+}
+
+.aurum-card-cta {
+  border-radius: 32px;
+}
+
+/* Reusable Metallic Button */
+.btn-aurum-primary {
+  background: var(--grad-silver);
+  color: #050609;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 100px;
+  padding: 0.65rem 1.4rem;
+  font-size: 0.82rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-aurum-primary:hover {
+  background: var(--grad-silver-bright);
+  box-shadow: 0 4px 20px rgba(184, 192, 204, 0.28), inset 0 1px 2px rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+}
+
+.btn-aurum-primary:active {
+  transform: translateY(0);
+}
+
+.btn-aurum-secondary {
+  background: rgba(23, 27, 34, 0.8);
+  color: var(--bone);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  border-radius: 100px;
+  padding: 0.65rem 1.3rem;
+  font-size: 0.82rem;
+  border: var(--border-silver-subtle);
+  box-shadow: inset 0 1px 0 rgba(228, 232, 238, 0.08);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-aurum-secondary:hover {
+  background: rgba(31, 36, 44, 0.95);
+  border-color: rgba(184, 192, 204, 0.28);
+  color: var(--silver-bright);
+  transform: translateY(-1px);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--obsidian-1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--graphite);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel);
+}
+
+/* Technical Monospace Metadata Label */
+.mono-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bone-muted);
+}
+
+/* Editorial Silver Gradient Headings */
+.editorial-heading-silver {
+  background: var(--grad-silver-bright);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Leaflet Custom Dark Overrides */
+.leaflet-container {
+  background: #0a0c10 !important;
+  font-family: 'Calibri', 'Carlito', 'Segoe UI', 'Inter Tight', sans-serif !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #101318 !important;
+  color: #e8ecf2 !important;
+  border: 1px solid rgba(184, 192, 204, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8) !important;
+  padding: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: #101318 !important;
+}
+
+.leaflet-popup-close-button {
+  color: #8a94a4 !important;
+}

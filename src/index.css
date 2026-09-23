@@ -1,0 +1,40 @@
+@import './styles/aurum.css';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--obsidian-0);
+    color: var(--bone);
+    font-family: 'Calibri', 'Carlito', 'Segoe UI', 'Inter Tight', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    border: none;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+  }
+}
