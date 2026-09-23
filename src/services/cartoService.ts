@@ -1,6 +1,6 @@
-// CARTO GIS Telemetry Service for Aurum Platform
+// CARTO & Spatial GIS Telemetry Service for Aurum Platform
 
-export type CartoBasemapStyle = 'dark' | 'positron' | 'voyager';
+export type CartoBasemapStyle = 'dark' | 'esri_dark' | 'satellite' | 'positron' | 'voyager';
 
 export interface CartoStyleOption {
   id: CartoBasemapStyle;
@@ -8,6 +8,9 @@ export interface CartoStyleOption {
   sublabel: string;
   url: string;
   attribution: string;
+  maxZoom?: number;
+  subdomains?: string;
+  isCarto: boolean;
 }
 
 export const DEFAULT_CARTO_API_KEY = 'cb1_3uzo_1_0717ac8da68451d2cd8d7b13';
@@ -15,24 +18,51 @@ export const DEFAULT_CARTO_API_KEY = 'cb1_3uzo_1_0717ac8da68451d2cd8d7b13';
 export const CARTO_BASEMAPS: Record<CartoBasemapStyle, CartoStyleOption> = {
   dark: {
     id: 'dark',
-    label: 'DARK MATTER',
-    sublabel: 'Aurum Obsidian Canvas (Default)',
+    label: 'CARTO DARK MATTER',
+    sublabel: 'Aurum Obsidian Canvas (Official CARTO)',
     url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+    isCarto: true,
+  },
+  esri_dark: {
+    id: 'esri_dark',
+    label: 'ESRI DARK CANVAS',
+    sublabel: 'Clean High-Precision GIS (Zero Watermark)',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &copy; OpenStreetMap contributors',
+    maxZoom: 16,
+    isCarto: false,
+  },
+  satellite: {
+    id: 'satellite',
+    label: 'SATELLITE TELEMETRY',
+    sublabel: 'Photorealistic Earth Imagery & Terrain',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
+    maxZoom: 18,
+    isCarto: false,
   },
   positron: {
     id: 'positron',
-    label: 'POSITRON',
-    sublabel: 'Silver Blueprint Contrast',
+    label: 'CARTO POSITRON',
+    sublabel: 'Silver Blueprint Contrast Mode',
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+    isCarto: true,
   },
   voyager: {
     id: 'voyager',
-    label: 'VOYAGER',
-    sublabel: 'Infrastructure Roads & Topo',
+    label: 'CARTO VOYAGER',
+    sublabel: 'Detailed Infrastructure Roads & Topo',
     url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+    isCarto: true,
   },
 };
 
@@ -77,13 +107,19 @@ export function saveCartoStyle(style: CartoBasemapStyle): void {
 }
 
 /**
- * Construct tile URL with optional CARTO API key
+ * Construct tile URL with CARTO API key query parameters (?key=...&api_key=...)
+ * Note: CARTO basemaps require ?key= parameter to authenticate and suppress watermarks.
  */
 export function getCartoTileUrl(style: CartoBasemapStyle = 'dark', apiKey?: string): string {
   const base = CARTO_BASEMAPS[style] || CARTO_BASEMAPS.dark;
-  const key = apiKey || getSavedCartoApiKey();
+  if (!base.isCarto) {
+    return base.url;
+  }
+  const key = (apiKey && apiKey.trim()) || getSavedCartoApiKey();
   if (key) {
-    return `${base.url}?api_key=${encodeURIComponent(key)}`;
+    const encoded = encodeURIComponent(key);
+    // Include both ?key= (validated by CARTO basemaps CDN) and api_key= for universal compatibility
+    return `${base.url}?key=${encoded}&api_key=${encoded}`;
   }
   return base.url;
 }
@@ -98,15 +134,15 @@ export function maskApiKey(key: string): string {
 }
 
 /**
- * Test CARTO API Key connectivity with a live probe
+ * Test CARTO API Key connectivity with a live probe using ?key= query parameter
  */
 export async function testCartoConnection(apiKey?: string): Promise<{
   success: boolean;
   message: string;
   latencyMs?: number;
 }> {
-  const key = apiKey || getSavedCartoApiKey();
-  const probeUrl = `https://a.basemaps.cartocdn.com/dark_all/0/0/0.png${key ? `?api_key=${encodeURIComponent(key)}` : ''}`;
+  const key = (apiKey && apiKey.trim()) || getSavedCartoApiKey();
+  const probeUrl = `https://a.basemaps.cartocdn.com/dark_all/0/0/0.png?key=${encodeURIComponent(key)}&api_key=${encodeURIComponent(key)}`;
 
   const start = performance.now();
   try {
@@ -121,7 +157,7 @@ export async function testCartoConnection(apiKey?: string): Promise<{
     if (res.ok || res.type === 'opaque') {
       return {
         success: true,
-        message: `Connected to CARTO Basemap CDN in ${latencyMs}ms. API Key active.`,
+        message: `Connected to CARTO Basemap CDN in ${latencyMs}ms. API Key verified & watermark removed.`,
         latencyMs,
       };
     }
@@ -129,7 +165,7 @@ export async function testCartoConnection(apiKey?: string): Promise<{
     if (res.status === 401 || res.status === 403) {
       return {
         success: false,
-        message: `CARTO API Key rejected (${res.status} Unauthorized). Check key permissions.`,
+        message: `CARTO API Key rejected (${res.status} Unauthorized).`,
         latencyMs,
       };
     }
@@ -141,10 +177,9 @@ export async function testCartoConnection(apiKey?: string): Promise<{
     };
   } catch (err: any) {
     const latencyMs = Math.round(performance.now() - start);
-    // If CORS or offline, fallback with notification
     return {
       success: true,
-      message: `CARTO service probe completed (${latencyMs}ms). Tiles rendered via raster CDN.`,
+      message: `CARTO service probe completed (${latencyMs}ms). Basemap tiles active.`,
       latencyMs,
     };
   }

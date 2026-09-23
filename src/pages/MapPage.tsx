@@ -159,6 +159,7 @@ export const MapPage: React.FC<MapPageProps> = ({ onNavigate }) => {
         selectedProject={selectedProject}
         onSelectProject={setSelectedProject}
         onInspectProject={handleInspect}
+        onNavigate={onNavigate}
       />
 
       {/* Quick Select Project Corridor Cards */}
