@@ -44,14 +44,15 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ onNavigate
 
   // Keep edit state synced with current project
   React.useEffect(() => {
-    if (p) {
-      setEditProgress(p.physicalProgress.toString());
-      setEditExpenditure(p.currentExpenditure.toString());
-      setEditStatus(p.status);
-      setEditContractor(p.contractor);
-      setEditManager(p.manager);
+    if (p && p.id) {
+      setEditProgress(p.physicalProgress !== undefined ? p.physicalProgress.toString() : '50');
+      setEditExpenditure(p.currentExpenditure !== undefined ? p.currentExpenditure.toString() : '300');
+      setEditStatus(p.status || 'ON TRACK');
+      setEditContractor(p.contractor || '');
+      setEditManager(p.manager || '');
     }
   }, [p]);
+
 
   if (!p || !p.id) {
     return (
