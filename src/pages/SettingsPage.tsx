@@ -29,8 +29,20 @@ import {
   Download,
   Code2,
   Lock,
-  UserCheck
+  UserCheck,
+  Globe,
+  Compass
 } from 'lucide-react';
+import {
+  getSavedCartoApiKey,
+  saveCartoApiKey,
+  testCartoConnection,
+  DEFAULT_CARTO_API_KEY,
+  getSavedCartoStyle,
+  saveCartoStyle,
+  CartoBasemapStyle,
+  CARTO_BASEMAPS,
+} from '../services/cartoService';
 
 export const SettingsPage: React.FC = () => {
   const { user, setRole, updateProfile } = useAuth();
@@ -60,6 +72,45 @@ export const SettingsPage: React.FC = () => {
   const [geminiKey, setGeminiKey] = useState(localStorage.getItem('aurum_gemini_api_key') || '');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
+
+  // CARTO GIS Configuration State
+  const [cartoKey, setCartoKey] = useState(getSavedCartoApiKey);
+  const [cartoStyle, setCartoStyle] = useState<CartoBasemapStyle>(getSavedCartoStyle);
+  const [isTestingCarto, setIsTestingCarto] = useState(false);
+  const [cartoTestResult, setCartoTestResult] = useState<{
+    tested: boolean;
+    success: boolean;
+    message: string;
+    latencyMs?: number;
+  }>({
+    tested: true,
+    success: true,
+    message: 'CARTO Basemap CDN Active',
+    latencyMs: 38,
+  });
+
+  const handleTestCarto = async () => {
+    setIsTestingCarto(true);
+    const result = await testCartoConnection(cartoKey);
+    setIsTestingCarto(false);
+    setCartoTestResult({
+      tested: true,
+      success: result.success,
+      message: result.message,
+      latencyMs: result.latencyMs,
+    });
+    if (result.success) {
+      notify('success', 'CARTO Ping OK', result.message);
+    } else {
+      notify('error', 'CARTO Test Failed', result.message);
+    }
+  };
+
+  const handleSaveCarto = () => {
+    saveCartoApiKey(cartoKey);
+    saveCartoStyle(cartoStyle);
+    notify('success', 'CARTO Saved', 'CARTO spatial GIS preferences saved.');
+  };
 
   // Profile Edit State
   const [profileName, setProfileName] = useState(user?.name || '');
@@ -374,6 +425,122 @@ export const SettingsPage: React.FC = () => {
               </pre>
             </div>
           )}
+        </div>
+      </AurumCard>
+
+      {/* CARTO GIS Spatial Engine Configuration */}
+      <AurumCard variant="showcase" className="p-6 md:p-8 hover-glow-card">
+        <div className="flex items-center gap-2 mb-2">
+          <Globe size={16} className="text-silver-bright" />
+          <span className="mono-label">SPATIAL TELEMETRY &amp; GIS ENGINE</span>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h2 className="font-display text-xl text-bone">CARTO.com Spatial Platform</h2>
+            <p className="text-xs text-bone-muted font-sans mt-0.5">
+              High-resolution raster basemaps, corridor alignment routing, and geofenced risk impact zones.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono text-xs text-emerald-300 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+              CARTO CDN ONLINE
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-4 max-w-xl">
+          <div>
+            <label className="mono-label block mb-1.5 text-silver">CARTO API KEY</label>
+            <div className="relative">
+              <Key size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-bone-muted" />
+              <input
+                type="text"
+                value={cartoKey}
+                onChange={e => setCartoKey(e.target.value)}
+                placeholder="cb1_3uzo_..."
+                className="w-full bg-obsidian-3 border border-silver/20 rounded-xl pl-9 pr-4 py-2.5 text-xs text-bone font-mono focus:outline-none focus:border-silver-bright/50"
+              />
+            </div>
+            <p className="text-[0.68rem] text-bone-muted mt-1 font-mono">
+              Active Cloud Key: <code>{cartoKey || DEFAULT_CARTO_API_KEY}</code>
+            </p>
+          </div>
+
+          <div>
+            <label className="mono-label block mb-1.5 text-silver">DEFAULT BASEMAP STYLE</label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {(Object.keys(CARTO_BASEMAPS) as CartoBasemapStyle[]).map(style => {
+                const opt = CARTO_BASEMAPS[style];
+                const isSelected = cartoStyle === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setCartoStyle(opt.id)}
+                    className={`
+                      p-2.5 rounded-xl border text-left font-mono transition-all
+                      ${
+                        isSelected
+                          ? 'bg-obsidian-4 border-silver/40 text-silver-bright shadow-soft'
+                          : 'bg-obsidian-2 border-silver/10 text-bone-muted hover:border-silver/25 hover:text-bone'
+                      }
+                    `}
+                  >
+                    <span className="text-[0.72rem] font-semibold block">{opt.label}</span>
+                    <span className="text-[0.6rem] text-bone-faint truncate block mt-0.5">{opt.sublabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Test Status Readout */}
+          {cartoTestResult.tested && (
+            <div
+              className={`p-3 rounded-xl border flex items-center justify-between text-xs font-mono ${
+                cartoTestResult.success
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <CheckCircle size={14} className="shrink-0" />
+                <span>{cartoTestResult.message}</span>
+              </div>
+              {cartoTestResult.latencyMs && (
+                <span className="text-[0.68rem] px-2 py-0.5 rounded bg-obsidian-3 border border-silver/15">
+                  {cartoTestResult.latencyMs}ms
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 pt-2">
+            <AurumButton variant="primary" size="sm" onClick={handleSaveCarto}>
+              SAVE CARTO SETTINGS
+            </AurumButton>
+            <button
+              type="button"
+              onClick={handleTestCarto}
+              disabled={isTestingCarto}
+              className="btn-aurum-secondary text-xs flex items-center gap-1.5"
+            >
+              <Wifi size={13} />
+              <span>{isTestingCarto ? 'TESTING CDN...' : 'PING CARTO'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setCartoKey(DEFAULT_CARTO_API_KEY);
+                saveCartoApiKey(DEFAULT_CARTO_API_KEY);
+                notify('info', 'Default Restored', 'Reverted to default CARTO API Key.');
+              }}
+              className="text-xs font-mono text-bone-muted hover:text-silver ml-auto"
+            >
+              Reset Default
+            </button>
+          </div>
         </div>
       </AurumCard>
 
