@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVM & Analytics - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .quadrant-box {
+      height: 280px;
+      position: relative;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .quadrant-center-x {
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 50%;
+      border-top: 1px dashed var(--border-medium);
+    }
+    .quadrant-center-y {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      left: 50%;
+      border-left: 1px dashed var(--border-medium);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div class="global-search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" placeholder="Search EVM telemetry...">
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="reports.html" class="btn btn-primary btn-sm">Generate EVM Audit</a>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>QUANTITATIVE TELEMETRY • ANSI/EIA-748</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+              Standard 32 Criteria Grounding
+            </div>
+          </div>
+          <h1 class="page-title">EARNED VALUE MANAGEMENT (EVM)</h1>
+          <p class="page-subtitle">Rigorous cost and schedule performance indexing across capital expenditure baselines.</p>
+        </div>
+
+        <!-- 4 Top EVM Metrics -->
+        <div class="grid-4" style="margin-bottom: 24px;">
+          <div class="kpi-card">
+            <div class="kpi-header"><span>TOTAL PLANNED VALUE (PV)</span></div>
+            <div class="kpi-value">₹3,240 Cr</div>
+            <div class="kpi-meta">Expected Work to Date</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>TOTAL EARNED VALUE (EV)</span></div>
+            <div class="kpi-value" style="color: #38bdf8;">₹2,738 Cr</div>
+            <div class="kpi-meta">Value of Completed Works</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>PORTFOLIO CPI</span></div>
+            <div class="kpi-value" style="color: #facc15;">0.92</div>
+            <div class="kpi-meta warning">₹0.92 Value per ₹1.00 Spent</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>PORTFOLIO SPI</span></div>
+            <div class="kpi-value" style="color: #f87171;">0.84</div>
+            <div class="kpi-meta danger">16% Schedule Velocity Drag</div>
+          </div>
+        </div>
+
+        <!-- Performance Matrix Table -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-header">
+            <div>
+              <span class="card-title">Portfolio EVM Performance Matrix</span>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Asset-by-asset ANSI/EIA-748 variance indices.</p>
+            </div>
+            <span class="badge badge-on-track">Live Recalculation</span>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code / Asset</th>
+                  <th>Budget (BAC)</th>
+                  <th>Earned (EV)</th>
+                  <th>Actual (AC)</th>
+                  <th>Cost Var (CV)</th>
+                  <th>Sched Var (SV)</th>
+                  <th>CPI</th>
+                  <th>SPI</th>
+                  <th>Est. At Completion (EAC)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="evmTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Benchmark Reference Guide -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">EVM Performance Rules & Thresholds</span>
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.6; color: var(--text-muted);">
+              <p style="margin-bottom: 10px;">
+                <strong style="color: #10b981;">● CPI &gt; 1.0:</strong> Project is performing under budget. Capital efficiency is favorable.
+              </p>
+              <p style="margin-bottom: 10px;">
+                <strong style="color: #ef4444;">● CPI &lt; 0.90:</strong> Critical cost overrun. Unplanned expenditure exceeds physical milestone completion.
+              </p>
+              <p style="margin-bottom: 10px;">
+                <strong style="color: #10b981;">● SPI &gt; 1.0:</strong> Work progress is ahead of scheduled time baseline.
+              </p>
+              <p>
+                <strong style="color: #ef4444;">● SPI &lt; 0.90:</strong> Severe schedule drag requiring immediate critical-path fast-tracking.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Executive EVM Action Protocol</span>
+            </div>
+            <div style="font-size: 0.8rem; line-height: 1.6; color: var(--text-muted);">
+              <p style="margin-bottom: 8px;">
+                1. <strong>Trigger Escalation:</strong> Highway Package 4 (CPI: 0.81, SPI: 0.66) and Dedicated Freight Rail (CPI: 0.80, SPI: 0.83) require formal milestone re-baselining.
+              </p>
+              <p style="margin-bottom: 8px;">
+                2. <strong>Capital Defense:</strong> Project Director must hold tripartite review with EPC contractor Larsen & Toubro.
+              </p>
+              <p>
+                3. <strong>What-If Simulation:</strong> Evaluate scenario compression on bridge foundations using the platform simulator.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('analytics');
+
+      const tbody = document.getElementById('evmTableBody');
+      tbody.innerHTML = PROJECTS_DATA.map(p => `
+        <tr>
+          <td>
+            <div style="font-weight: 600; color: var(--text-bright);">${p.name}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">${p.code}</div>
+          </td>
+          <td style="font-family: var(--font-mono);">₹${p.plannedCost} Cr</td>
+          <td style="font-family: var(--font-mono); color: #38bdf8;">₹${p.evm.ev} Cr</td>
+          <td style="font-family: var(--font-mono);">₹${p.evm.ac} Cr</td>
+          <td style="font-family: var(--font-mono); font-weight: 600; color: ${p.evm.cv >= 0 ? '#10b981' : '#f87171'};">
+            ${p.evm.cv >= 0 ? '+' : ''}₹${p.evm.cv} Cr
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 600; color: ${p.evm.sv >= 0 ? '#10b981' : '#f87171'};">
+            ${p.evm.sv >= 0 ? '+' : ''}₹${p.evm.sv} Cr
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 700; color: ${p.evm.cpi >= 1.0 ? '#10b981' : p.evm.cpi >= 0.9 ? '#facc15' : '#f87171'};">
+            ${p.evm.cpi.toFixed(2)}
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 700; color: ${p.evm.spi >= 1.0 ? '#10b981' : p.evm.spi >= 0.9 ? '#facc15' : '#f87171'};">
+            ${p.evm.spi.toFixed(2)}
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 600;">₹${p.evm.eac} Cr</td>
+          <td>
+            <span class="badge ${p.status === 'CRITICAL' ? 'badge-critical' : p.status === 'AT RISK' ? 'badge-at-risk' : p.status === 'WATCH' ? 'badge-watch' : 'badge-on-track'}">
+              ${p.status}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

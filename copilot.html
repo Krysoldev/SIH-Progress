@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Intelligence Copilot - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .chat-container {
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .chat-bubble {
+      max-width: 85%;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--silver-bright);
+      color: var(--bg-canvas);
+      border-bottom-right-radius: 2px;
+      font-weight: 500;
+    }
+    .chat-bubble.ai {
+      align-self: flex-start;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-bright);
+      border-bottom-left-radius: 2px;
+    }
+    .chat-input-bar {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface-2);
+      display: flex;
+      gap: 10px;
+    }
+    .chip-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip-btn:hover {
+      background: var(--bg-surface-3);
+      color: var(--text-bright);
+      border-color: var(--border-medium);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #10b981;">
+            ● Copilot Grounded Reasoning Active
+          </div>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>NATURAL LANGUAGE INTELLIGENCE</span>
+            </div>
+            <span class="badge badge-on-track">TELEMETRY GROUNDED</span>
+          </div>
+          <h1 class="page-title">PROJECT INTELLIGENCE COPILOT</h1>
+          <p class="page-subtitle">Evidence-grounded project querying, root-cause attribution, and actionable interventions.</p>
+        </div>
+
+        <!-- 2 Columns: Telemetry Drawer (4 cols) & Chat (8 cols) -->
+        <div class="grid-12">
+          <!-- Left Telemetry Context -->
+          <div class="col-4">
+            <div class="card" style="height: 100%;">
+              <div class="card-header">
+                <span class="card-title">Live Context Drawer</span>
+                <span class="badge badge-at-risk">INFRA-HWY-001</span>
+              </div>
+              <h4 style="font-family: var(--font-display); font-size: 1rem; color: var(--text-bright); margin-bottom: 4px;">
+                Highway Expansion Package 4
+              </h4>
+              <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 16px;">
+                Ahmedabad – Vadodara Corridor, Gujarat
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 8px; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-surface-2); border-radius: 6px;">
+                  <span style="color: var(--text-muted);">Physical Progress:</span>
+                  <span style="color: #38bdf8; font-weight: 600;">55% (Plan: 83%)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-surface-2); border-radius: 6px;">
+                  <span style="color: var(--text-muted);">Expenditure:</span>
+                  <span>₹340 / ₹500 Cr</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-surface-2); border-radius: 6px;">
+                  <span style="color: var(--text-muted);">Cost Performance (CPI):</span>
+                  <span style="color: #f87171; font-weight: 600;">0.81 (Overrun)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-surface-2); border-radius: 6px;">
+                  <span style="color: var(--text-muted);">Schedule Performance (SPI):</span>
+                  <span style="color: #f87171; font-weight: 600;">0.66 (Lag)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px; background: var(--bg-surface-2); border-radius: 6px;">
+                  <span style="color: var(--text-muted);">Critical Bottleneck:</span>
+                  <span style="color: #f87171;">River Bridge (+4m)</span>
+                </div>
+              </div>
+
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">
+                  Suggested Questions:
+                </span>
+                <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+                  <button class="chip-btn" onclick="sendPrompt('Why is Highway Expansion Package 4 at risk?')">
+                    Why is Package 4 at risk?
+                  </button>
+                  <button class="chip-btn" onclick="sendPrompt('What is the forecast cost overrun at completion?')">
+                    Forecast cost overrun at completion?
+                  </button>
+                  <button class="chip-btn" onclick="sendPrompt('What recovery levers are available to mitigate schedule delay?')">
+                    Recovery levers to mitigate delay?
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Chat Interface -->
+          <div class="col-8">
+            <div class="chat-container">
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-bubble ai">
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #38bdf8; margin-bottom: 4px;">
+                    ✨ MASTER DEV INTELLIGENCE ENGINE
+                  </div>
+                  Greetings, Director. I am synchronized with all 6 infrastructure corridor telemetry feeds. How can I assist your portfolio oversight today?
+                </div>
+              </div>
+
+              <form class="chat-input-bar" onsubmit="handleChatSubmit(event)">
+                <input type="text" id="chatInput" class="form-input" placeholder="Ask about schedule velocity, cost drift, bottlenecks..." required>
+                <button type="submit" class="btn btn-primary" style="padding: 0 18px;">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function sendPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const container = document.getElementById('chatMessages');
+
+      // Append user bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.textContent = query;
+      container.appendChild(userBubble);
+
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      // Simulated AI response
+      setTimeout(() => {
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'chat-bubble ai';
+
+        let responseHtml = '';
+        const q = query.toLowerCase();
+
+        if (q.includes('risk') || q.includes('why')) {
+          responseHtml = `
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #f87171; margin-bottom: 6px;">
+              FINDINGS: CRITICAL SCHEDULE & COST DIVERGENCE
+            </div>
+            <strong>Highway Expansion Package 4</strong> has a risk score of <strong>78/100</strong> driven by:
+            <ul style="margin: 8px 0 8px 18px; line-height: 1.5;">
+              <li><strong>Physical Lag:</strong> 55% completion vs 83% planned trajectory at month 30.</li>
+              <li><strong>Cost Inefficiency:</strong> CPI has dropped to 0.81 with ₹340 Cr spent of ₹500 Cr budget.</li>
+              <li><strong>Critical Path Bottleneck:</strong> River Bridge Pier Foundation delayed by +4 months due to unmapped subsurface strata.</li>
+            </ul>
+            <strong>Recommended Action:</strong> Mobilize additional foundation piling rigs and initiate tripartite EVM audit.
+          `;
+        } else if (q.includes('cost') || q.includes('overrun')) {
+          responseHtml = `
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #facc15; margin-bottom: 6px;">
+              EVM PROJECTION (ANSI/EIA-748)
+            </div>
+            Based on current CPI of <strong>0.81</strong>, the Estimate at Completion (EAC) is projected at <strong>₹617.3 Cr</strong> against a sanctioned BAC of ₹500 Cr.
+            <br><br>
+            Projected cost overrun: <strong style="color: #f87171;">₹85.5 Cr</strong> to ₹117.3 Cr depending on contractor escalation claims.
+          `;
+        } else {
+          responseHtml = `
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #10b981; margin-bottom: 6px;">
+              RECOMMENDED RECOVERY LEVERS
+            </div>
+            According to the What-If Simulation Laboratory:
+            <ul style="margin: 8px 0 8px 18px; line-height: 1.5;">
+              <li><strong>Compress Bridge Piling:</strong> Adding 2 secondary drilling teams can recover ~2.4 months of schedule lag.</li>
+              <li><strong>Expenditure Acceleration:</strong> Increase monthly billing rate from ₹11.3 Cr to ₹15.0 Cr to align with dry season earthworks.</li>
+            </ul>
+            Test these levers live in the <a href="simulation.html" style="color: #38bdf8; text-decoration: underline;">Simulation Laboratory</a>.
+          `;
+        }
+
+        aiBubble.innerHTML = responseHtml;
+        container.appendChild(aiBubble);
+        container.scrollTop = container.scrollHeight;
+      }, 500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('copilot');
+    });
+  </script>
+</body>
+</html>

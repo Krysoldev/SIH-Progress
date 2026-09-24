@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Early Warning Alerts - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .alert-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+    .alert-card:hover {
+      border-color: var(--border-medium);
+      background: var(--bg-surface-2);
+    }
+    .alert-card.critical {
+      border-left: 4px solid #ef4444;
+    }
+    .alert-card.high {
+      border-left: 4px solid #f97316;
+    }
+    .alert-card.medium {
+      border-left: 4px solid #eab308;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div class="global-search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="alertSearch" placeholder="Filter early warnings..." oninput="filterAlerts()">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-secondary btn-sm" onclick="acknowledgeAll()">Acknowledge All</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>EARLY WARNING SIGNAL FEED</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #fb923c;" id="alertsMatchedCount">
+              6 Signals Active
+            </div>
+          </div>
+          <h1 class="page-title">EARLY WARNINGS & ANOMALIES</h1>
+          <p class="page-subtitle">Real-time alerts triggered by cost drift, schedule deceleration, and milestone bottlenecks.</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" onclick="setSeverityFilter('ALL', this)">All Severities</button>
+          <button class="btn btn-secondary btn-sm" onclick="setSeverityFilter('CRITICAL', this)">Critical</button>
+          <button class="btn btn-secondary btn-sm" onclick="setSeverityFilter('HIGH', this)">High</button>
+          <button class="btn btn-secondary btn-sm" onclick="setSeverityFilter('MEDIUM', this)">Medium</button>
+        </div>
+
+        <!-- Alerts List -->
+        <div id="alertsContainer">
+          <!-- Dynamically rendered -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    let activeAlerts = [
+      { id: 'a1', severity: 'CRITICAL', type: 'SCHEDULE', project: 'Highway Expansion Package 4', code: 'INFRA-HWY-001', text: 'River Bridge foundation piling stalled on critical path (+4 months deviation).', time: '12m ago' },
+      { id: 'a2', severity: 'CRITICAL', type: 'COST', project: 'Western Dedicated Freight Corridor', code: 'INFRA-DFC-004', text: 'Cost variance deficit breached ₹228 Cr threshold; CPI degraded to 0.80.', time: '28m ago' },
+      { id: 'a3', severity: 'CRITICAL', type: 'SCHEDULE', project: 'Western Dedicated Freight Corridor', code: 'INFRA-DFC-004', text: 'Substation transformer procurement delay exceeds 5 months.', time: '1h ago' },
+      { id: 'a4', severity: 'HIGH', type: 'COST', project: 'Highway Expansion Package 4', code: 'INFRA-HWY-001', text: 'Cost Performance Index (CPI) has degraded to 0.81 (overrun estimated at ₹85.5 Cr).', time: '2h ago' },
+      { id: 'a5', severity: 'MEDIUM', type: 'PROGRESS', project: 'Bengaluru Metro Phase 2B Airport Link', code: 'INFRA-MTR-002', text: 'Night-time traffic corridor permission delays pre-cast viaduct lifting.', time: '3h ago' },
+      { id: 'a6', severity: 'MEDIUM', type: 'SCHEDULE', project: 'Chenab River Rail Arch Bridge Package', code: 'INFRA-BRG-006', text: 'Wind sensor calibration delayed by extreme high-altitude weather.', time: '5h ago' }
+    ];
+
+    let currentSeverity = 'ALL';
+
+    function setSeverityFilter(sev, btn) {
+      currentSeverity = sev;
+      document.querySelectorAll('.page-container .btn-sm').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+      });
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-primary');
+      filterAlerts();
+    }
+
+    function filterAlerts() {
+      const query = (document.getElementById('alertSearch')?.value || '').toLowerCase();
+      const filtered = activeAlerts.filter(a => {
+        const matchSev = currentSeverity === 'ALL' || a.severity === currentSeverity;
+        const matchText = a.text.toLowerCase().includes(query) || a.project.toLowerCase().includes(query);
+        return matchSev && matchText;
+      });
+
+      document.getElementById('alertsMatchedCount').textContent = `${filtered.length} Signals Active`;
+
+      const container = document.getElementById('alertsContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 40px; color: var(--text-muted);">
+            No active signals match the selected filter.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(a => `
+        <div class="alert-card ${a.severity.toLowerCase()}" id="alert-${a.id}">
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span class="badge ${a.severity === 'CRITICAL' ? 'badge-critical' : a.severity === 'HIGH' ? 'badge-at-risk' : 'badge-watch'}">
+                ${a.severity}
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">${a.code} • ${a.project}</span>
+              <span style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint); margin-left: auto;">${a.time}</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-bright); font-weight: 500;">
+              ${a.text}
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; shrink: 0;">
+            <a href="project-detail.html" class="btn btn-secondary btn-sm">Inspect</a>
+            <button class="btn btn-primary btn-sm" onclick="acknowledgeAlert('${a.id}')">Acknowledge</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function acknowledgeAlert(id) {
+      activeAlerts = activeAlerts.filter(a => a.id !== id);
+      showToast('Alert acknowledged and logged in governance register.', 'success');
+      filterAlerts();
+    }
+
+    function acknowledgeAll() {
+      activeAlerts = [];
+      showToast('All signals marked as reviewed.', 'success');
+      filterAlerts();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('alerts');
+      filterAlerts();
+    });
+  </script>
+</body>
+</html>

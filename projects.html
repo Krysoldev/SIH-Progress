@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects Portfolio - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-2);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active {
+      background: var(--silver-bright);
+      color: var(--bg-canvas);
+      border-color: var(--silver-bright);
+      font-weight: 600;
+    }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .project-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+    .project-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div class="global-search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="portfolioSearch" placeholder="Search project portfolio..." oninput="filterProjects()">
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="admin.html" class="btn btn-primary btn-sm">+ Provision Asset</a>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>CAPITAL WORKS INVENTORY</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);" id="projectCountLabel">
+              Showing 6 of 6 Packages
+            </div>
+          </div>
+          <h1 class="page-title">PROJECTS PORTFOLIO</h1>
+          <p class="page-subtitle">Directory of high-priority mega-projects with earned value and schedule tracking.</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-faint);">STATUS:</span>
+            <button class="filter-btn active" onclick="setStatusFilter('ALL', this)">All</button>
+            <button class="filter-btn" onclick="setStatusFilter('CRITICAL', this)">Critical</button>
+            <button class="filter-btn" onclick="setStatusFilter('AT RISK', this)">At Risk</button>
+            <button class="filter-btn" onclick="setStatusFilter('WATCH', this)">Watch</button>
+            <button class="filter-btn" onclick="setStatusFilter('ON TRACK', this)">On Track</button>
+          </div>
+
+          <div class="filter-group">
+            <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-faint);">SECTOR:</span>
+            <select id="sectorSelect" class="form-select" style="width: auto; padding: 4px 10px; font-size: 0.75rem;" onchange="filterProjects()">
+              <option value="ALL">All Sectors</option>
+              <option value="Highways & Expressways">Highways & Expressways</option>
+              <option value="Rail Transit & Metros">Rail Transit & Metros</option>
+              <option value="Bridges & Tunnels">Bridges & Tunnels</option>
+              <option value="Ports & Maritime">Ports & Maritime</option>
+              <option value="Energy Infrastructure">Energy Infrastructure</option>
+            </select>
+            <button id="btnToggleView" class="btn btn-secondary btn-sm" onclick="toggleViewMode()">Switch to Grid</button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="tableView" class="card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code / Project Name</th>
+                  <th>Sector</th>
+                  <th>Budget (BAC)</th>
+                  <th>Exp. to Date</th>
+                  <th>Physical Progress</th>
+                  <th>Status</th>
+                  <th>Risk Score</th>
+                  <th>Contractor</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="portfolioTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Grid View (hidden by default) -->
+        <div id="gridView" class="project-grid" style="display: none;">
+          <!-- Dynamically rendered -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    let currentStatus = 'ALL';
+    let viewMode = 'table';
+
+    function setStatusFilter(status, btn) {
+      currentStatus = status;
+      document.querySelectorAll('.filter-group button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterProjects();
+    }
+
+    function toggleViewMode() {
+      viewMode = viewMode === 'table' ? 'grid' : 'table';
+      document.getElementById('btnToggleView').textContent = viewMode === 'table' ? 'Switch to Grid' : 'Switch to Table';
+      document.getElementById('tableView').style.display = viewMode === 'table' ? 'block' : 'none';
+      document.getElementById('gridView').style.display = viewMode === 'grid' ? 'grid' : 'none';
+    }
+
+    function filterProjects() {
+      const search = (document.getElementById('portfolioSearch')?.value || '').toLowerCase();
+      const sector = document.getElementById('sectorSelect')?.value || 'ALL';
+
+      const filtered = PROJECTS_DATA.filter(p => {
+        const matchStatus = currentStatus === 'ALL' || p.status === currentStatus;
+        const matchSector = sector === 'ALL' || p.category === sector;
+        const matchSearch = p.name.toLowerCase().includes(search) || p.code.toLowerCase().includes(search) || p.location.toLowerCase().includes(search);
+        return matchStatus && matchSector && matchSearch;
+      });
+
+      document.getElementById('projectCountLabel').textContent = `Showing ${filtered.length} of ${PROJECTS_DATA.length} Packages`;
+
+      // Render Table
+      const tbody = document.getElementById('portfolioTableBody');
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td>
+            <div style="font-weight: 600; color: var(--text-bright);">${p.name}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">${p.code} • ${p.location}</div>
+          </td>
+          <td style="color: var(--text-muted);">${p.category}</td>
+          <td style="font-family: var(--font-mono); font-weight: 600;">₹${p.plannedCost} Cr</td>
+          <td style="font-family: var(--font-mono); color: var(--text-muted);">₹${p.currentExpenditure} Cr</td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 60px; height: 6px; background: var(--bg-surface-3); border-radius: 3px; overflow: hidden;">
+                <div style="width: ${p.physicalProgress}%; height: 100%; background: #38bdf8; border-radius: 3px;"></div>
+              </div>
+              <span style="font-family: var(--font-mono); font-size: 0.75rem;">${p.physicalProgress}%</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge ${p.status === 'CRITICAL' ? 'badge-critical' : p.status === 'AT RISK' ? 'badge-at-risk' : p.status === 'WATCH' ? 'badge-watch' : 'badge-on-track'}">
+              ${p.status}
+            </span>
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 600; color: ${p.riskScore >= 75 ? '#f87171' : p.riskScore >= 50 ? '#facc15' : '#34d399'};">
+            ${p.riskScore}/100
+          </td>
+          <td style="color: var(--text-muted); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.contractor}</td>
+          <td>
+            <a href="project-detail.html" class="btn btn-secondary btn-sm">Inspect</a>
+          </td>
+        </tr>
+      `).join('');
+
+      // Render Grid
+      const grid = document.getElementById('gridView');
+      grid.innerHTML = filtered.map(p => `
+        <div class="project-card">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <span class="badge ${p.status === 'CRITICAL' ? 'badge-critical' : p.status === 'AT RISK' ? 'badge-at-risk' : p.status === 'WATCH' ? 'badge-watch' : 'badge-on-track'}">
+                ${p.status}
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: ${p.riskScore >= 75 ? '#f87171' : p.riskScore >= 50 ? '#facc15' : '#34d399'};">
+                Risk: ${p.riskScore}/100
+              </span>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.05rem; color: var(--text-bright); margin-bottom: 4px;">${p.name}</h3>
+            <p style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 12px;">${p.code} • ${p.location}</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">${p.description}</p>
+          </div>
+
+          <div>
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; margin-bottom: 4px;">
+                <span>Physical Progress</span>
+                <span style="color: #38bdf8;">${p.physicalProgress}%</span>
+              </div>
+              <div style="height: 6px; background: var(--bg-surface-3); border-radius: 3px; overflow: hidden;">
+                <div style="width: ${p.physicalProgress}%; height: 100%; background: #38bdf8;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.75rem; padding-top: 10px; border-top: 1px solid var(--border-subtle); margin-bottom: 12px;">
+              <span style="color: var(--text-muted);">Budget: <strong style="color: var(--text-bright);">₹${p.plannedCost} Cr</strong></span>
+              <span style="color: var(--text-muted);">Spent: <strong style="color: var(--text-bright);">₹${p.currentExpenditure} Cr</strong></span>
+            </div>
+
+            <a href="project-detail.html" class="btn btn-secondary" style="width: 100%;">View Full Telemetry →</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('projects');
+      filterProjects();
+    });
+  </script>
+</body>
+</html>

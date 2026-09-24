@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What-If Scenario Simulation - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .slider-box {
+      margin-bottom: 22px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .slider-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+    .slider-value {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+    .aurum-slider {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-surface-3);
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .aurum-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--silver-bright);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+    .simulation-result-card {
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">SIMULATION ASSET:</span>
+            <select id="simProjectSelector" class="form-select" style="width: auto; padding: 4px 10px; font-size: 0.75rem;" onchange="updateSimAsset()">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-secondary btn-sm" onclick="resetSliders()">Reset Sliders</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>DYNAMIC SCENARIO LABORATORY</span>
+            </div>
+            <span class="badge badge-watch">MONTE CARLO PROJECTION</span>
+          </div>
+          <h1 class="page-title">WHAT-IF SCENARIO SIMULATION</h1>
+          <p class="page-subtitle">Evaluate schedule compression, fast-track interventions, and inflation shocks in real time.</p>
+        </div>
+
+        <!-- 2 Columns: Sliders (7 cols) & Projected Outcomes (5 cols) -->
+        <div class="grid-12">
+          <!-- Left Controls -->
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Intervention & Shock Levers</span>
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">Adjust parameters</span>
+              </div>
+
+              <!-- Slider 1 -->
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span class="slider-title">1. Physical Progress Velocity Adjustment</span>
+                  <span class="slider-value" id="valProgress">0%</span>
+                </div>
+                <input type="range" id="rangeProgress" class="aurum-slider" min="-20" max="30" value="0" step="5" oninput="calculateSimulation()">
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-faint); margin-top: 4px;">
+                  <span>-20% (Labour Slowdown)</span>
+                  <span>Baseline (0%)</span>
+                  <span>+30% (Double Shifts)</span>
+                </div>
+              </div>
+
+              <!-- Slider 2 -->
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span class="slider-title">2. Capital Expenditure Velocity</span>
+                  <span class="slider-value" id="valSpend">0%</span>
+                </div>
+                <input type="range" id="rangeSpend" class="aurum-slider" min="-25" max="50" value="0" step="5" oninput="calculateSimulation()">
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-faint); margin-top: 4px;">
+                  <span>-25% (Cashflow Freeze)</span>
+                  <span>Baseline (0%)</span>
+                  <span>+50% (Accelerated Billing)</span>
+                </div>
+              </div>
+
+              <!-- Slider 3 -->
+              <div class="slider-box">
+                <div class="slider-header">
+                  <span class="slider-title">3. Critical-Path Fast-Track Buffer</span>
+                  <span class="slider-value" id="valBuffer">0 Months</span>
+                </div>
+                <input type="range" id="rangeBuffer" class="aurum-slider" min="0" max="6" value="0" step="1" oninput="calculateSimulation()">
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-faint); margin-top: 4px;">
+                  <span>0 Months</span>
+                  <span>3 Months</span>
+                  <span>6 Months Compression</span>
+                </div>
+              </div>
+
+              <!-- Slider 4 -->
+              <div class="slider-box" style="margin-bottom: 10px;">
+                <div class="slider-header">
+                  <span class="slider-title">4. Commodity & Material Price Inflation</span>
+                  <span class="slider-value" id="valInflation">0%</span>
+                </div>
+                <input type="range" id="rangeInflation" class="aurum-slider" min="0" max="15" value="0" step="1" oninput="calculateSimulation()">
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-faint); margin-top: 4px;">
+                  <span>0% (Stable)</span>
+                  <span>7% (Moderate)</span>
+                  <span>15% (Steel / Fuel Surge)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Projected Readout -->
+          <div class="col-6">
+            <div class="card" style="height: 100%;">
+              <div class="card-header">
+                <span class="card-title">Projected Outcome Readout</span>
+                <span class="badge badge-on-track">Live Telemetry</span>
+              </div>
+
+              <div class="grid-2" style="margin-bottom: 20px;">
+                <!-- Result 1 -->
+                <div class="simulation-result-card">
+                  <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">
+                    PROJECTED FINAL COST
+                  </div>
+                  <div style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--text-bright); margin: 6px 0;" id="outCost">
+                    ₹585.5 Cr
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #f87171;" id="outCostDelta">
+                    +₹85.5 Cr Overrun vs BAC
+                  </div>
+                </div>
+
+                <!-- Result 2 -->
+                <div class="simulation-result-card">
+                  <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase;">
+                    ESTIMATED COMPLETION
+                  </div>
+                  <div style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: #38bdf8; margin: 6px 0;" id="outMonth">
+                    Month 41.2
+                  </div>
+                  <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #f87171;" id="outMonthDelta">
+                    +5.2 Months Delay
+                  </div>
+                </div>
+              </div>
+
+              <!-- Re-calibrated Risk Score -->
+              <div style="background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px;">
+                <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">
+                  RE-CALIBRATED COMPOSITE RISK SCORE
+                </div>
+                <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px;">
+                  <span style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: #f87171;" id="outRisk">
+                    78
+                  </span>
+                  <span style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted);">/ 100</span>
+                </div>
+                <div style="margin-top: 6px;">
+                  <span class="badge badge-critical" id="outRiskBadge">CRITICAL ATTENTION</span>
+                </div>
+              </div>
+
+              <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; padding: 12px; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.15); border-radius: 8px;">
+                💡 <strong>Analyst Insight:</strong> Accelerating physical progress by <strong>+20%</strong> paired with <strong>3 months</strong> of fast-tracking recovers the schedule delay and brings the risk index down to safe operating boundaries.
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    let activeSimProject = PROJECTS_DATA[0];
+
+    function calculateSimulation() {
+      const p = activeSimProject;
+
+      const progDelta = parseInt(document.getElementById('rangeProgress').value);
+      const spendDelta = parseInt(document.getElementById('rangeSpend').value);
+      const bufferMonths = parseInt(document.getElementById('rangeBuffer').value);
+      const inflation = parseInt(document.getElementById('rangeInflation').value);
+
+      document.getElementById('valProgress').textContent = (progDelta > 0 ? '+' : '') + progDelta + '%';
+      document.getElementById('valSpend').textContent = (spendDelta > 0 ? '+' : '') + spendDelta + '%';
+      document.getElementById('valBuffer').textContent = bufferMonths + ' Months';
+      document.getElementById('valInflation').textContent = inflation + '%';
+
+      // Computations
+      const baseOverrun = p.prediction.predictedCostOverrun;
+      const baseDelay = p.prediction.predictedTimeOverrun;
+
+      // Cost Calculation
+      const inflationCost = (p.plannedCost * (inflation / 100));
+      const fastTrackCost = bufferMonths * 4.5;
+      const simulatedOverrun = Math.max(0, baseOverrun + inflationCost + fastTrackCost - (progDelta * 1.2));
+      const simulatedFinalCost = p.plannedCost + simulatedOverrun;
+
+      // Time Calculation
+      const recoveredMonths = (progDelta * 0.12) + (bufferMonths * 0.75);
+      const simulatedDelay = Math.max(0, baseDelay - recoveredMonths);
+      const simulatedCompletionMonth = p.plannedDuration + simulatedDelay;
+
+      // Risk Score
+      let newRisk = Math.round(p.riskScore - (recoveredMonths * 6) + (inflation * 1.5) - (progDelta * 0.5));
+      newRisk = Math.max(10, Math.min(98, newRisk));
+
+      // DOM Updates
+      document.getElementById('outCost').textContent = `₹${simulatedFinalCost.toFixed(1)} Cr`;
+      document.getElementById('outCostDelta').textContent = simulatedOverrun > 0 ? `+₹${simulatedOverrun.toFixed(1)} Cr Overrun` : 'Within Budget';
+      document.getElementById('outCostDelta').style.color = simulatedOverrun > 20 ? '#f87171' : '#10b981';
+
+      document.getElementById('outMonth').textContent = `Month ${simulatedCompletionMonth.toFixed(1)}`;
+      document.getElementById('outMonthDelta').textContent = simulatedDelay > 0 ? `+${simulatedDelay.toFixed(1)} Months Delay` : 'On Schedule';
+      document.getElementById('outMonthDelta').style.color = simulatedDelay > 1.5 ? '#f87171' : '#10b981';
+
+      document.getElementById('outRisk').textContent = newRisk;
+      document.getElementById('outRisk').style.color = newRisk >= 75 ? '#f87171' : newRisk >= 50 ? '#facc15' : '#10b981';
+
+      const badge = document.getElementById('outRiskBadge');
+      if (newRisk >= 75) {
+        badge.className = 'badge badge-critical';
+        badge.textContent = 'CRITICAL ATTENTION';
+      } else if (newRisk >= 50) {
+        badge.className = 'badge badge-at-risk';
+        badge.textContent = 'MODERATE RISK';
+      } else {
+        badge.className = 'badge badge-on-track';
+        badge.textContent = 'LOW RISK';
+      }
+    }
+
+    function resetSliders() {
+      document.getElementById('rangeProgress').value = 0;
+      document.getElementById('rangeSpend').value = 0;
+      document.getElementById('rangeBuffer').value = 0;
+      document.getElementById('rangeInflation').value = 0;
+      calculateSimulation();
+    }
+
+    function updateSimAsset() {
+      const select = document.getElementById('simProjectSelector');
+      activeSimProject = PROJECTS_DATA.find(p => p.id === select.value) || PROJECTS_DATA[0];
+      resetSliders();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('simulation');
+
+      const select = document.getElementById('simProjectSelector');
+      select.innerHTML = PROJECTS_DATA.map(p => `
+        <option value="${p.id}">${p.name}</option>
+      `).join('');
+
+      calculateSimulation();
+    });
+  </script>
+</body>
+</html>

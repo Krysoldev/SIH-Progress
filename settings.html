@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Console Settings - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #10b981;">
+            ● Officer Profile Active
+          </div>
+        </div>
+      </header>
+
+      <main class="page-container" style="max-width: 1000px;">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>CONFIGURATION & PREFERENCES</span>
+            </div>
+            <span class="badge badge-on-track">AUTHENTICATED</span>
+          </div>
+          <h1 class="page-title">CONSOLE SETTINGS</h1>
+          <p class="page-subtitle">Manage your personal credentials, notification thresholds, and security preferences.</p>
+        </div>
+
+        <div class="grid-2">
+          <!-- Section 1: Profile -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Officer Profile</span>
+              <span class="badge badge-watch">Clearance Level 4</span>
+            </div>
+            <form onsubmit="handleSaveProfile(event)">
+              <div class="form-group">
+                <label class="form-label">Full Name & Title</label>
+                <input type="text" id="profName" class="form-input" value="Rajesh Nair" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Official Email</label>
+                <input type="email" id="profEmail" class="form-input" value="rajesh.nair@masterdev.infra" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Department / Division</label>
+                <input type="text" id="profDept" class="form-input" value="National Infrastructure Taskforce" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Designated Role</label>
+                <select class="form-select">
+                  <option selected>Project Director (Portfolio Overview)</option>
+                  <option>Financial Controller (EVM)</option>
+                  <option>Site Resident Engineer</option>
+                  <option>AI Risk Intelligence Officer</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+            </form>
+          </div>
+
+          <!-- Section 2: Notifications -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Notification Triggers</span>
+              <span class="badge badge-on-track">Automated Feed</span>
+            </div>
+            <form onsubmit="handleSaveNotifications(event)">
+              <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; background: var(--bg-surface-2); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">
+                  <input type="checkbox" checked style="accent-color: var(--silver-bright); margin-top: 2px;">
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Critical Risk Alerts</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Instant alert dispatch when project composite risk exceeds 75/100.</div>
+                  </div>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 10px; background: var(--bg-surface-2); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">
+                  <input type="checkbox" checked style="accent-color: var(--silver-bright); margin-top: 2px;">
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Critical-Path Delay Alerts</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Notify when stage-gate milestone slippage exceeds 2 months.</div>
+                  </div>
+                </label>
+
+                <label style="display: flex; align-items: flex-start; gap: 10px; background: var(--bg-surface-2); padding: 12px; border-radius: 8px; border: 1px solid var(--border-subtle); cursor: pointer;">
+                  <input type="checkbox" checked style="accent-color: var(--silver-bright); margin-top: 2px;">
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Executive Morning Briefing</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Consolidated portfolio health summary email at 08:00 IST daily.</div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Currency Metric Display</label>
+                <select class="form-select">
+                  <option selected>₹ Crores (Indian Rupee - INR)</option>
+                  <option>₹ Lakhs (Indian Rupee - INR)</option>
+                  <option>$ Millions (USD)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-sm">Save Preferences</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Section 3: Password Security -->
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <span class="card-title">Console Access Key & Password</span>
+          </div>
+          <form onsubmit="handleSavePassword(event)" style="max-width: 600px;">
+            <div class="grid-3" style="margin-bottom: 16px;">
+              <div>
+                <label class="form-label">Current Password</label>
+                <input type="password" id="oldPass" class="form-input" placeholder="••••••••" required>
+              </div>
+              <div>
+                <label class="form-label">New Password</label>
+                <input type="password" id="newPass" class="form-input" placeholder="••••••••" required>
+              </div>
+              <div>
+                <label class="form-label">Confirm Password</label>
+                <input type="password" id="cnfPass" class="form-input" placeholder="••••••••" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Update Password</button>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function handleSaveProfile(e) {
+      e.preventDefault();
+      showToast('Officer profile credentials updated.', 'success');
+    }
+
+    function handleSaveNotifications(e) {
+      e.preventDefault();
+      showToast('Notification triggers saved.', 'success');
+    }
+
+    function handleSavePassword(e) {
+      e.preventDefault();
+      const n = document.getElementById('newPass').value;
+      const c = document.getElementById('cnfPass').value;
+      if (n !== c) {
+        showToast('Passwords do not match.', 'error');
+        return;
+      }
+      showToast('Access password updated successfully.', 'success');
+      document.getElementById('oldPass').value = '';
+      document.getElementById('newPass').value = '';
+      document.getElementById('cnfPass').value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('settings');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Briefings & Audit Reports - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .report-paper {
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 8px;
+      padding: 48px;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      font-family: var(--font-body);
+    }
+    .report-paper h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+    .report-paper table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      color: #0f172a;
+    }
+    .report-paper th {
+      background: #f1f5f9;
+      color: #334155;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .report-paper td {
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.8rem;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .report-paper, .report-paper * {
+        visibility: visible;
+      }
+      .report-paper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        padding: 20px;
+      }
+      .sidebar, .top-header, .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header no-print">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+            Executive Audit Dossier Generator
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save as PDF</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header no-print">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>GOVERNANCE DOCUMENTATION</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Report</button>
+          </div>
+          <h1 class="page-title">EXECUTIVE BRIEFINGS & REPORTS</h1>
+          <p class="page-subtitle">Standardized infrastructure oversight briefings for ministerial and steering committees.</p>
+        </div>
+
+        <!-- Printable Document Canvas -->
+        <div class="report-paper">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 24px;">
+            <div>
+              <h1 style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.02em;">
+                MASTER DEV INFRASTRUCTURE INTELLIGENCE
+              </h1>
+              <p style="font-family: var(--font-mono); font-size: 0.75rem; color: #475569; text-transform: uppercase;">
+                Monthly Portfolio Audit & Early-Warning Briefing • National Taskforce
+              </p>
+            </div>
+            <div style="text-align: right; font-family: var(--font-mono); font-size: 0.72rem; color: #475569;">
+              <div>DATE: September 2026</div>
+              <div>CLASSIFICATION: OFFICIAL USE</div>
+              <div>CLEARANCE: DIRECTORATE</div>
+            </div>
+          </div>
+
+          <h2 style="font-size: 1.25rem;">1. Executive Summary</h2>
+          <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 16px;">
+            The active capital works portfolio comprises <strong>6 monitored mega-packages</strong> with a cumulative sanctioned budget of <strong>₹4,000 Crores</strong>. Total capital expenditure deployed to date stands at <strong>₹2,779 Crores</strong> (69.4% fund utilization). Overall weighted physical completion is <strong>64.8%</strong>.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; text-align: center;">
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #64748b;">COMMITTED CAPITAL</div>
+              <div style="font-size: 1.3rem; font-weight: 700;">₹4,000 Cr</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #64748b;">PHYSICAL PROGRESS</div>
+              <div style="font-size: 1.3rem; font-weight: 700; color: #0284c7;">64.8%</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #64748b;">PORTFOLIO CPI</div>
+              <div style="font-size: 1.3rem; font-weight: 700; color: #d97706;">0.92</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #64748b;">CRITICAL PACKAGES</div>
+              <div style="font-size: 1.3rem; font-weight: 700; color: #dc2626;">2 Assets</div>
+            </div>
+          </div>
+
+          <h2 style="font-size: 1.25rem;">2. Asset Telemetry & EVM Matrix</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Package Code</th>
+                <th>Project Name</th>
+                <th>Sanctioned (BAC)</th>
+                <th>Spent</th>
+                <th>Progress</th>
+                <th>CPI</th>
+                <th>SPI</th>
+                <th>Risk Index</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INFRA-HWY-001</td>
+                <td><strong>Highway Expansion Package 4</strong></td>
+                <td>₹500 Cr</td>
+                <td>₹340 Cr</td>
+                <td>55%</td>
+                <td style="color: #dc2626; font-weight: bold;">0.81</td>
+                <td style="color: #dc2626; font-weight: bold;">0.66</td>
+                <td style="color: #dc2626; font-weight: bold;">78 / 100</td>
+              </tr>
+              <tr>
+                <td>INFRA-MTR-002</td>
+                <td>Bengaluru Metro Phase 2B</td>
+                <td>₹820 Cr</td>
+                <td>₹615 Cr</td>
+                <td>68%</td>
+                <td>0.91</td>
+                <td>0.84</td>
+                <td>54 / 100</td>
+              </tr>
+              <tr>
+                <td>INFRA-PRT-003</td>
+                <td>Visakhapatnam Container Terminal</td>
+                <td>₹650 Cr</td>
+                <td>₹280 Cr</td>
+                <td>42%</td>
+                <td>0.98</td>
+                <td>0.91</td>
+                <td>24 / 100</td>
+              </tr>
+              <tr>
+                <td>INFRA-DFC-004</td>
+                <td><strong>Western Dedicated Freight Rail</strong></td>
+                <td>₹1,200 Cr</td>
+                <td>₹1,140 Cr</td>
+                <td>76%</td>
+                <td style="color: #dc2626; font-weight: bold;">0.80</td>
+                <td style="color: #dc2626; font-weight: bold;">0.83</td>
+                <td style="color: #dc2626; font-weight: bold;">86 / 100</td>
+              </tr>
+              <tr>
+                <td>INFRA-SLR-005</td>
+                <td>Bhadla Solar Park Phase III</td>
+                <td>₹350 Cr</td>
+                <td>₹310 Cr</td>
+                <td>94%</td>
+                <td>1.06</td>
+                <td>0.98</td>
+                <td>16 / 100</td>
+              </tr>
+              <tr>
+                <td>INFRA-BRG-006</td>
+                <td>Chenab River Rail Arch Bridge</td>
+                <td>₹480 Cr</td>
+                <td>₹390 Cr</td>
+                <td>82%</td>
+                <td>1.01</td>
+                <td>0.92</td>
+                <td>48 / 100</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2 style="font-size: 1.25rem;">3. High-Priority Directives</h2>
+          <div style="font-size: 0.85rem; line-height: 1.6;">
+            <p style="margin-bottom: 8px;">
+              <strong>1. Highway Package 4:</strong> Contractor Larsen & Toubro directed to add 2 secondary piling teams to clear bridge foundation bottlenecks before the monsoon window.
+            </p>
+            <p style="margin-bottom: 8px;">
+              <strong>2. Western Dedicated Freight Rail:</strong> Expedite customs clearance and site delivery for high-voltage substation transformers to unblock electrification trials.
+            </p>
+            <p>
+              <strong>3. Audit Submission:</strong> Next inter-departmental milestone reconciliation scheduled for 15 October 2026.
+            </p>
+          </div>
+
+          <div style="margin-top: 36px; padding-top: 16px; border-top: 1px solid #cbd5e1; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; color: #64748b;">
+            <div>Prepared by: Master Dev Engine v2.4</div>
+            <div>Authorized Signatory: Rajesh Nair, Project Director</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('reports');
+    });
+  </script>
+</body>
+</html>

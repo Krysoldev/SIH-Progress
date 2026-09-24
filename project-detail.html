@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details: Highway Expansion Package 4 - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .milestone-track {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    .milestone-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .milestone-status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <a href="projects.html" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);">← Back to Portfolio</a>
+        </div>
+        <div class="header-right">
+          <a href="simulation.html" class="btn btn-secondary btn-sm">Simulate Recovery</a>
+          <a href="reports.html" class="btn btn-primary btn-sm">Export PDF Report</a>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="badge badge-at-risk">AT RISK</span>
+              <span>INFRA-HWY-001 • AHMEDABAD – VADODARA CORRIDOR</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: #f87171;">
+              ● Risk Score: 78/100 (High Exposure)
+            </div>
+          </div>
+          <h1 class="page-title">Highway Expansion Package 4</h1>
+          <p class="page-subtitle">Six-laning of high-density logistics corridor with 3 major river bridges and automated tolling.</p>
+        </div>
+
+        <!-- 5 Key Metrics Row -->
+        <div class="grid-4" style="grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 24px;">
+          <div class="kpi-card">
+            <div class="kpi-header"><span>BUDGET (BAC)</span></div>
+            <div class="kpi-value">₹500 Cr</div>
+            <div class="kpi-meta">Sanctioned Capital</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>CURRENT EXPENDITURE</span></div>
+            <div class="kpi-value">₹340 Cr</div>
+            <div class="kpi-meta warning">68% of Budget Spent</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>PHYSICAL PROGRESS</span></div>
+            <div class="kpi-value" style="color: #38bdf8;">55%</div>
+            <div class="kpi-meta danger">Planned was 83%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>ELAPSED SCHEDULE</span></div>
+            <div class="kpi-value">30 / 36m</div>
+            <div class="kpi-meta danger">6 Months Remaining</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span>EST. AT COMPLETION (EAC)</span></div>
+            <div class="kpi-value" style="color: #f87171;">₹617 Cr</div>
+            <div class="kpi-meta danger">+₹85.5 Cr Overrun</div>
+          </div>
+        </div>
+
+        <!-- Main Content 2 Columns: EVM (8 cols) & Milestones (4 cols) -->
+        <div class="grid-12" style="margin-bottom: 28px;">
+          <!-- EVM & S-Curve -->
+          <div class="col-8">
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="card-header">
+                <span class="card-title">Trajectory & Planned vs Actual S-Curve</span>
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8;">Actual: 55% at Month 30</span>
+              </div>
+              <div style="height: 240px; position: relative;">
+                <canvas id="scurveDetailCanvas"></canvas>
+              </div>
+            </div>
+
+            <!-- EVM Breakdown Panel -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">Earned Value Management (ANSI/EIA-748 Standards)</span>
+                <span class="badge badge-watch">EVM Telemetry</span>
+              </div>
+              <div class="grid-4" style="margin-bottom: 16px;">
+                <div style="background: var(--bg-surface-2); padding: 12px; border-radius: 8px;">
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">COST PERFORMANCE (CPI)</div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; color: #f87171; font-weight: 600;">0.81</div>
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #f87171;">Severe Cost Inefficiency</div>
+                </div>
+                <div style="background: var(--bg-surface-2); padding: 12px; border-radius: 8px;">
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">SCHEDULE PERFORMANCE (SPI)</div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; color: #f87171; font-weight: 600;">0.66</div>
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #f87171;">Critical Schedule Drag</div>
+                </div>
+                <div style="background: var(--bg-surface-2); padding: 12px; border-radius: 8px;">
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">COST VARIANCE (CV)</div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; color: #f87171; font-weight: 600;">-₹65 Cr</div>
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">EV (₹275) - AC (₹340)</div>
+                </div>
+                <div style="background: var(--bg-surface-2); padding: 12px; border-radius: 8px;">
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">SCHEDULE VARIANCE (SV)</div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; color: #f87171; font-weight: 600;">-₹140 Cr</div>
+                  <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">EV (₹275) - PV (₹415)</div>
+                </div>
+              </div>
+
+              <!-- Root Cause Attribution -->
+              <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 16px;">
+                <h4 style="font-family: var(--font-display); font-size: 0.95rem; color: #fca5a5; margin-bottom: 8px;">
+                  Why is this project at risk? (Evidence-Grounded Root Causes)
+                </h4>
+                <ul style="font-size: 0.8rem; color: var(--text-main); padding-left: 18px; line-height: 1.6;">
+                  <li>Physical progress is severely below target trajectory (<strong>55% actual</strong> vs <strong>83% planned</strong> at month 30).</li>
+                  <li>Capital expenditure of ₹340 Cr has consumed 68% of total budget with 45% of physical works remaining.</li>
+                  <li>River Bridge Pier Foundation delayed by <strong>+4 months</strong> on the critical path due to unmapped geotechnical strata.</li>
+                  <li>Remaining 6 months duration is insufficient without fast-tracking structural works.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Milestones Tracker (4 cols) -->
+          <div class="col-4">
+            <div class="card" style="height: 100%;">
+              <div class="card-header">
+                <span class="card-title">Critical Path Milestones</span>
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">5 Stage-Gates</span>
+              </div>
+
+              <div class="milestone-track">
+                <div class="milestone-item">
+                  <div class="milestone-status-dot" style="background: #10b981;"></div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Stage-Gate Clearances & Land</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: #10b981;">COMPLETED • Month 6 (No Delay)</div>
+                  </div>
+                </div>
+
+                <div class="milestone-item">
+                  <div class="milestone-status-dot" style="background: #10b981;"></div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Earthworks & Embankments</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: #10b981;">COMPLETED • Month 14 (+1m)</div>
+                  </div>
+                </div>
+
+                <div class="milestone-item" style="border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05);">
+                  <div class="milestone-status-dot" style="background: #ef4444;"></div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: #fca5a5;">River Bridge Pier Foundation</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: #ef4444; font-weight: 600;">DELAYED (+4 Months) • Critical Bottleneck</div>
+                  </div>
+                </div>
+
+                <div class="milestone-item">
+                  <div class="milestone-status-dot" style="background: #eab308;"></div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">Flexible Pavement Bituminous Layers</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: #eab308;">IN PROGRESS • Month 32 (+3m)</div>
+                  </div>
+                </div>
+
+                <div class="milestone-item">
+                  <div class="milestone-status-dot" style="background: var(--text-faint);"></div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.82rem; color: var(--text-muted);">Toll Telemetry & Safety Signoff</div>
+                    <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-faint);">PLANNED • Month 36</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
+                <a href="simulation.html" class="btn btn-primary" style="width: 100%;">Evaluate What-If Scenarios →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('details');
+      const p = PROJECTS_DATA[0];
+      drawSCurve('scurveDetailCanvas', p.trajectory);
+
+      window.addEventListener('resize', () => {
+        drawSCurve('scurveDetailCanvas', p.trajectory);
+      });
+    });
+  </script>
+</body>
+</html>

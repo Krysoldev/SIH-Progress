@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin & Governance Console - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 24px;
+    }
+    .tab-nav-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tab-nav-btn.active {
+      color: var(--silver-bright);
+      border-bottom-color: var(--silver-bright);
+      font-weight: 600;
+      background: var(--bg-surface-2);
+      border-radius: 6px 6px 0 0;
+    }
+    .action-icon-btn {
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+    }
+    .action-icon-btn:hover {
+      background: var(--bg-surface-3);
+      color: var(--text-bright);
+      border-color: var(--border-medium);
+    }
+    .action-icon-btn.delete:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div class="global-search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" placeholder="Search admin registry...">
+          </div>
+        </div>
+        <div class="header-right">
+          <button class="btn btn-secondary btn-sm" onclick="openModal('modalAddUser')">+ Provision Officer</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modalAddProject')">+ Add Project</button>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>ADMINISTRATION & CONTROL</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #10b981;">
+              ● System Online & Synchronized
+            </div>
+          </div>
+          <h1 class="page-title">ADMIN CONSOLE</h1>
+          <p class="page-subtitle">Manage capital infrastructure packages, user permissions, and portfolio lifecycle.</p>
+        </div>
+
+        <!-- 4 Summary KPI Cards -->
+        <div class="grid-4" style="margin-bottom: 24px;">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>PROJECT ASSETS</span>
+              <span>📁</span>
+            </div>
+            <div class="kpi-value" id="kpiAssetCount">6</div>
+            <div class="kpi-meta">₹4,000 Cr Committed</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>ACTIVE OFFICERS</span>
+              <span>👥</span>
+            </div>
+            <div class="kpi-value" id="kpiUserCount">4</div>
+            <div class="kpi-meta positive">Role-Based Clearance</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>PORTFOLIO HEALTH</span>
+              <span>✅</span>
+            </div>
+            <div class="kpi-value">4 / 6</div>
+            <div class="kpi-meta">On Track or Watch</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>ACTIVE SIGNALS</span>
+              <span>⚠️</span>
+            </div>
+            <div class="kpi-value" style="color: #fb923c;">6</div>
+            <div class="kpi-meta warning">Early Warnings Tracked</div>
+          </div>
+        </div>
+
+        <!-- Clean 2-Tab Navigation -->
+        <div class="tab-nav">
+          <button class="tab-nav-btn active" id="tabBtnProjects" onclick="switchAdminTab('projects')">
+            <span>📁 Project Asset Management</span>
+          </button>
+          <button class="tab-nav-btn" id="tabBtnUsers" onclick="switchAdminTab('users')">
+            <span>👥 Team & Access Control (IAM)</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Project Management -->
+        <div id="tabProjects">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <span class="card-title">Infrastructure Package Directory</span>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Search, edit, or provision capital assets.</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="adminProjectSearch" class="form-input" style="width: 220px; padding: 6px 10px; font-size: 0.75rem;" placeholder="Filter by name, contractor..." oninput="filterAdminProjects()">
+                <button class="btn btn-primary btn-sm" onclick="openModal('modalAddProject')">+ Add Project</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code / Project Name</th>
+                    <th>Sector</th>
+                    <th>Budget (BAC)</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Risk</th>
+                    <th>Contractor</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminProjectsTableBody">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Users Management -->
+        <div id="tabUsers" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <span class="card-title">Officer IAM Roster</span>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Role-based access clearances for infrastructure oversight.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openModal('modalAddUser')">+ Provision Officer</button>
+            </div>
+
+            <div class="grid-2" id="officersRosterGrid">
+              <!-- Dynamically Rendered -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal: Add Project -->
+  <div class="modal-overlay" id="modalAddProject">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Provision New Infrastructure Asset</h3>
+        <button class="modal-close" onclick="closeModal('modalAddProject')">✕</button>
+      </div>
+      <form onsubmit="handleCreateProject(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Project Name</label>
+            <input type="text" id="pName" class="form-input" placeholder="e.g. Chenab River Rail Arch Bridge" required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Package Code</label>
+              <input type="text" id="pCode" class="form-input" placeholder="e.g. CRB-PKG-01" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sector</label>
+              <select id="pCategory" class="form-select">
+                <option>Highways & Expressways</option>
+                <option>Rail Transit & Metros</option>
+                <option>Bridges & Tunnels</option>
+                <option>Ports & Maritime</option>
+                <option>Energy Infrastructure</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input type="text" id="pLocation" class="form-input" placeholder="e.g. Reasi District, J&K" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" id="pState" class="form-input" placeholder="e.g. Jammu & Kashmir" required>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Budget (₹ Crores)</label>
+              <input type="number" id="pCost" class="form-input" value="450" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Duration (Months)</label>
+              <input type="number" id="pDuration" class="form-input" value="36" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contractor Entity</label>
+            <input type="text" id="pContractor" class="form-input" placeholder="e.g. L&T Infrastructure" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddProject')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Initialize Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Provision Officer -->
+  <div class="modal-overlay" id="modalAddUser">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Provision Officer Identity</h3>
+        <button class="modal-close" onclick="closeModal('modalAddUser')">✕</button>
+      </div>
+      <form onsubmit="handleProvisionUser(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Officer Full Name</label>
+            <input type="text" id="uName" class="form-input" placeholder="e.g. Er. Devendra Gupta" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="uEmail" class="form-input" placeholder="devendra.gupta@infra.gov.in" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Clearance Role</label>
+            <select id="uRole" class="form-select">
+              <option>Project Director</option>
+              <option>Financial Controller</option>
+              <option>Resident Engineer</option>
+              <option>AI Risk Analyst</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department / Division</label>
+            <input type="text" id="uDept" class="form-input" placeholder="e.g. Bridges & Special Structures Wing" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modalAddUser')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Provision Officer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    let localProjects = [...PROJECTS_DATA];
+    let localOfficers = [...OFFICERS_DATA];
+
+    function switchAdminTab(tab) {
+      const pTab = document.getElementById('tabProjects');
+      const uTab = document.getElementById('tabUsers');
+      const pBtn = document.getElementById('tabBtnProjects');
+      const uBtn = document.getElementById('tabBtnUsers');
+
+      if (tab === 'projects') {
+        pTab.style.display = 'block';
+        uTab.style.display = 'none';
+        pBtn.classList.add('active');
+        uBtn.classList.remove('active');
+      } else {
+        pTab.style.display = 'none';
+        uTab.style.display = 'block';
+        uBtn.classList.add('active');
+        pBtn.classList.remove('active');
+      }
+    }
+
+    function renderAdminProjects() {
+      const tbody = document.getElementById('adminProjectsTableBody');
+      const query = (document.getElementById('adminProjectSearch')?.value || '').toLowerCase();
+
+      const filtered = localProjects.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.code.toLowerCase().includes(query) ||
+        p.contractor.toLowerCase().includes(query)
+      );
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td>
+            <div style="font-weight: 600; color: var(--text-bright);">${p.name}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">${p.code} • ${p.location}</div>
+          </td>
+          <td style="color: var(--text-muted);">${p.category}</td>
+          <td style="font-family: var(--font-mono); font-weight: 600;">₹${p.plannedCost} Cr</td>
+          <td>
+            <span style="font-family: var(--font-mono);">${p.physicalProgress}%</span>
+          </td>
+          <td>
+            <span class="badge ${p.status === 'CRITICAL' ? 'badge-critical' : p.status === 'AT RISK' ? 'badge-at-risk' : p.status === 'WATCH' ? 'badge-watch' : 'badge-on-track'}">
+              ${p.status}
+            </span>
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 600; color: ${p.riskScore >= 75 ? '#f87171' : p.riskScore >= 50 ? '#facc15' : '#34d399'};">
+            ${p.riskScore}/100
+          </td>
+          <td style="color: var(--text-muted); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.contractor}</td>
+          <td style="text-align: right;">
+            <div style="display: inline-flex; gap: 4px;">
+              <a href="project-detail.html" class="action-icon-btn" title="Inspect">👁️</a>
+              <button class="action-icon-btn delete" title="Delete" onclick="deleteProject('${p.id}')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      document.getElementById('kpiAssetCount').textContent = localProjects.length;
+    }
+
+    function renderAdminOfficers() {
+      const grid = document.getElementById('officersRosterGrid');
+      grid.innerHTML = localOfficers.map(u => `
+        <div style="background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div style="font-weight: 600; color: var(--text-bright);">${u.name}</div>
+              <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">${u.email}</div>
+            </div>
+            <span class="badge badge-watch">${u.role}</span>
+          </div>
+          <div style="margin-top: 10px; font-size: 0.78rem; color: var(--text-muted);">
+            Division: <span style="color: var(--text-main);">${u.dept}</span>
+          </div>
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-mono); font-size: 0.68rem; color: #10b981;">● Clearance Enforced</span>
+            <button class="action-icon-btn delete" onclick="deleteOfficer('${u.id}')">Revoke Access</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('kpiUserCount').textContent = localOfficers.length;
+    }
+
+    function filterAdminProjects() {
+      renderAdminProjects();
+    }
+
+    function deleteProject(id) {
+      if (confirm('Permanently remove this project asset?')) {
+        localProjects = localProjects.filter(p => p.id !== id);
+        renderAdminProjects();
+        showToast('Project removed from inventory.', 'info');
+      }
+    }
+
+    function deleteOfficer(id) {
+      if (confirm('Revoke access for this officer?')) {
+        localOfficers = localOfficers.filter(u => u.id !== id);
+        renderAdminOfficers();
+        showToast('Officer clearance revoked.', 'info');
+      }
+    }
+
+    function handleCreateProject(e) {
+      e.preventDefault();
+      const newP = {
+        id: `proj-${Date.now()}`,
+        code: document.getElementById('pCode').value.toUpperCase(),
+        name: document.getElementById('pName').value,
+        location: document.getElementById('pLocation').value,
+        state: document.getElementById('pState').value,
+        plannedCost: parseFloat(document.getElementById('pCost').value),
+        currentExpenditure: Math.round(parseFloat(document.getElementById('pCost').value) * 0.1),
+        physicalProgress: 12,
+        status: 'ON TRACK',
+        riskScore: 20,
+        category: document.getElementById('pCategory').value,
+        contractor: document.getElementById('pContractor').value,
+        trajectory: [{month: 0, planned: 0, actual: 0}, {month: 6, planned: 15, actual: 12}],
+        milestones: [{name: 'Stage-Gate Clearances', status: 'IN_PROGRESS', date: 'Month 6', delay: 0}],
+        alerts: []
+      };
+
+      localProjects.unshift(newP);
+      closeModal('modalAddProject');
+      renderAdminProjects();
+      showToast(`Project "${newP.name}" provisioned.`, 'success');
+    }
+
+    function handleProvisionUser(e) {
+      e.preventDefault();
+      const newU = {
+        id: `usr-${Date.now()}`,
+        name: document.getElementById('uName').value,
+        email: document.getElementById('uEmail').value,
+        role: document.getElementById('uRole').value,
+        dept: document.getElementById('uDept').value
+      };
+
+      localOfficers.push(newU);
+      closeModal('modalAddUser');
+      renderAdminOfficers();
+      showToast(`Officer account created for ${newU.name}.`, 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('admin');
+      renderAdminProjects();
+      renderAdminOfficers();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risk Analysis & Attribution - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <style>
+    .risk-dial-container {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: conic-gradient(#ef4444 0% 78%, var(--bg-surface-3) 78% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+    }
+    .risk-dial-inner {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--bg-surface-1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .component-score-bar {
+      margin-bottom: 16px;
+    }
+    .component-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      margin-bottom: 6px;
+    }
+    .component-track {
+      height: 8px;
+      background: var(--bg-surface-3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .component-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">ACTIVE ASSET:</span>
+            <select id="projectSelector" class="form-select" style="width: auto; padding: 4px 10px; font-size: 0.75rem;" onchange="changeRiskProject()">
+              <!-- Options populated dynamically -->
+            </select>
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="simulation.html" class="btn btn-primary btn-sm">Simulate Mitigations</a>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>EARLY WARNING RADAR • RISK INTELLIGENCE</span>
+            </div>
+            <span class="badge badge-critical" id="riskBadge">CRITICAL ATTENTION</span>
+          </div>
+          <h1 class="page-title" id="projectTitle">Risk Analysis & Root Causes</h1>
+          <p class="page-subtitle" id="projectSubtitle">Multi-factor composite risk index breakdown and verifiable root cause attributions.</p>
+        </div>
+
+        <!-- 2 Columns: Risk Dial & Components (4 cols) + Root Causes & Mitigations (8 cols) -->
+        <div class="grid-12" style="margin-bottom: 24px;">
+          <!-- Left: Risk Dial -->
+          <div class="col-4">
+            <div class="card" style="text-align: center;">
+              <div class="card-header" style="justify-content: center;">
+                <span class="card-title">Composite Risk Index</span>
+              </div>
+
+              <div class="risk-dial-container" id="dialContainer">
+                <div class="risk-dial-inner">
+                  <span style="font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: #f87171;" id="dialScore">78</span>
+                  <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">OUT OF 100</span>
+                </div>
+              </div>
+
+              <p style="font-size: 0.8rem; color: #fca5a5; font-weight: 500; margin-bottom: 20px;" id="dialSeverityText">
+                High Risk Exposure Detected
+              </p>
+
+              <!-- Component Risk Scores -->
+              <div style="text-align: left; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
+                <div class="component-score-bar">
+                  <div class="component-header">
+                    <span>Schedule Velocity Risk</span>
+                    <span style="color: #f87171;" id="scoreSched">82 / 100</span>
+                  </div>
+                  <div class="component-track">
+                    <div class="component-fill" id="fillSched" style="width: 82%; background: #ef4444;"></div>
+                  </div>
+                </div>
+
+                <div class="component-score-bar">
+                  <div class="component-header">
+                    <span>Cost Expenditure Drift</span>
+                    <span style="color: #fb923c;" id="scoreCost">74 / 100</span>
+                  </div>
+                  <div class="component-track">
+                    <div class="component-fill" id="fillCost" style="width: 74%; background: #f97316;"></div>
+                  </div>
+                </div>
+
+                <div class="component-score-bar">
+                  <div class="component-header">
+                    <span>Milestone Bottlenecks</span>
+                    <span style="color: #f87171;" id="scoreMile">81 / 100</span>
+                  </div>
+                  <div class="component-track">
+                    <div class="component-fill" id="fillMile" style="width: 81%; background: #ef4444;"></div>
+                  </div>
+                </div>
+
+                <div class="component-score-bar">
+                  <div class="component-header">
+                    <span>Procurement & Logistics</span>
+                    <span style="color: #facc15;" id="scoreProc">68 / 100</span>
+                  </div>
+                  <div class="component-track">
+                    <div class="component-fill" id="fillProc" style="width: 68%; background: #eab308;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Root Cause Attribution -->
+          <div class="col-8">
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="card-header">
+                <span class="card-title">Evidence-Grounded Root Causes</span>
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">Audited Signals</span>
+              </div>
+              <div style="background: rgba(239, 68, 68, 0.04); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; padding: 18px; margin-bottom: 20px;">
+                <h4 style="font-family: var(--font-display); font-size: 1.05rem; color: #fca5a5; margin-bottom: 12px;">
+                  Telemetry Findings & Bottlenecks:
+                </h4>
+                <ul id="rootCausesList" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.7; padding-left: 20px;">
+                  <!-- Populated dynamically -->
+                </ul>
+              </div>
+
+              <h4 style="font-family: var(--font-display); font-size: 1rem; color: var(--text-bright); margin-bottom: 12px;">
+                Recommended Executive Interventions
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-bright); font-size: 0.85rem;">Fast-Track Structural Pier Foundations</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Authorize additional piling rigs to recover 2.5 months schedule lag.</div>
+                  </div>
+                  <a href="simulation.html" class="btn btn-secondary btn-sm">Simulate →</a>
+                </div>
+
+                <div style="background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-bright); font-size: 0.85rem;">EVM Tripartite Financial Reconciliation</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Re-baseline EAC with EPC contractor to cap projected cost overrun.</div>
+                  </div>
+                  <a href="reports.html" class="btn btn-secondary btn-sm">Audit →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    function renderProjectRisk(p) {
+      document.getElementById('projectTitle').textContent = `${p.name} — Risk Telemetry`;
+      document.getElementById('dialScore').textContent = p.riskScore;
+      document.getElementById('dialContainer').style.background = `conic-gradient(${p.riskScore >= 75 ? '#ef4444' : p.riskScore >= 50 ? '#f97316' : '#10b981'} 0% ${p.riskScore}%, var(--bg-surface-3) ${p.riskScore}% 100%)`;
+      document.getElementById('dialScore').style.color = p.riskScore >= 75 ? '#f87171' : p.riskScore >= 50 ? '#fb923c' : '#34d399';
+
+      const causes = p.riskScore > 50 ? [
+        `Physical progress (${p.physicalProgress}%) has severely fallen behind planned trajectory.`,
+        `Current expenditure of ₹${p.currentExpenditure} Cr exceeds earned value baseline (CPI: ${p.evm.cpi.toFixed(2)}).`,
+        `Milestone slippage on critical path stage-gates.`,
+        `Remaining schedule duration provides insufficient buffer without mitigation.`
+      ] : [
+        `Stage-gate clearances completed on schedule with zero critical deviations.`,
+        `Earned Value metrics show strong cost compliance (CPI: ${p.evm.cpi.toFixed(2)}).`,
+        `Procurement pipeline verified with vendor delivery intact.`
+      ];
+
+      document.getElementById('rootCausesList').innerHTML = causes.map(c => `<li>${c}</li>`).join('');
+    }
+
+    function changeRiskProject() {
+      const select = document.getElementById('projectSelector');
+      const p = PROJECTS_DATA.find(item => item.id === select.value) || PROJECTS_DATA[0];
+      renderProjectRisk(p);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('risk');
+
+      const select = document.getElementById('projectSelector');
+      select.innerHTML = PROJECTS_DATA.map(p => `
+        <option value="${p.id}">${p.name} (${p.riskScore}/100)</option>
+      `).join('');
+
+      renderProjectRisk(PROJECTS_DATA[0]);
+    });
+  </script>
+</body>
+</html>

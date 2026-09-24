@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Master Dev - Infrastructure Intelligence & Early-Warning Platform</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div class="global-search">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" placeholder="Search corridors, assets...">
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="alerts.html" class="btn btn-secondary btn-sm">🔔 3 Alerts</a>
+          <a href="copilot.html" class="btn btn-primary btn-sm">✨ Ask Copilot</a>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>EARLY WARNING RADAR • LIVE TELEMETRY</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <a href="reports.html" class="btn btn-secondary btn-sm">Executive Briefing</a>
+              <a href="simulation.html" class="btn btn-primary btn-sm">Run Simulation</a>
+            </div>
+          </div>
+          <h1 class="page-title">PORTFOLIO OVERVIEW</h1>
+          <p class="page-subtitle">Consolidated real-time intelligence and risk metrics across national infrastructure assets.</p>
+        </div>
+
+        <!-- 4 Top KPI Metric Cards -->
+        <div class="grid-4" style="margin-bottom: 24px;">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>PORTFOLIO ASSETS</span>
+              <span>📁</span>
+            </div>
+            <div class="kpi-value">6</div>
+            <div class="kpi-meta">₹4,000 Cr Total Committed</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>PROJECTS AT RISK</span>
+              <span>⚠️</span>
+            </div>
+            <div class="kpi-value" style="color: #fb923c;">2</div>
+            <div class="kpi-meta danger">1 Critical • 1 At Risk</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>CAPITAL DEPLOYED</span>
+              <span>📈</span>
+            </div>
+            <div class="kpi-value">₹2,779 Cr</div>
+            <div class="kpi-meta positive">69.4% Fund Utilization</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>AVG SCHEDULE LAG</span>
+              <span>⏳</span>
+            </div>
+            <div class="kpi-value" style="color: #f87171;">+3.2m</div>
+            <div class="kpi-meta warning">Critical drag in 2 corridors</div>
+          </div>
+        </div>
+
+        <!-- Flagship Callout Banner -->
+        <div class="card" style="margin-bottom: 24px; border-color: rgba(249, 115, 22, 0.35); background: linear-gradient(135deg, rgba(249, 115, 22, 0.05), var(--bg-surface-1));">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="max-width: 800px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span class="badge badge-at-risk">AT RISK</span>
+                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">INFRA-HWY-001 • Risk Score: 78/100</span>
+              </div>
+              <h3 style="font-family: var(--font-display); font-size: 1.25rem; color: var(--text-bright); margin-bottom: 4px;">
+                Highway Expansion Package 4 — Critical Schedule & Cost Divergence
+              </h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
+                Physical progress is at <strong>55%</strong> while <strong>30 of 36 months</strong> have elapsed. Current expenditure has reached <strong>₹340 Cr</strong> with an estimated cost overrun of <strong>₹85.5 Cr</strong>.
+              </p>
+            </div>
+            <a href="project-detail.html" class="btn btn-primary">Inspect Details →</a>
+          </div>
+        </div>
+
+        <!-- Charts Grid: S-Curve (8 cols) + Risk Dist (4 cols) -->
+        <div class="grid-12" style="margin-bottom: 28px;">
+          <div class="card col-8">
+            <div class="card-header">
+              <span class="card-title">Highway Expansion Package 4 — Planned vs Actual S-Curve</span>
+              <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); display: flex; gap: 12px;">
+                <span style="color: #94a3b8;">-- Planned Baseline</span>
+                <span style="color: #38bdf8;">— Actual Progress</span>
+              </div>
+            </div>
+            <div style="height: 260px; position: relative;">
+              <canvas id="scurveCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="card col-4">
+            <div class="card-header">
+              <span class="card-title">Portfolio Risk Distribution</span>
+              <span class="badge badge-watch">6 Packages</span>
+            </div>
+            <div style="height: 200px; position: relative;">
+              <canvas id="riskDistCanvas"></canvas>
+            </div>
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+              <span>High Risk Ratio:</span>
+              <span style="color: #f87171; font-weight: bold;">33% (2 Assets)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Projects Portfolio Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <span class="card-title">Active Projects Directory</span>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Real-time progress, budget, and risk evaluation across corridors.</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <a href="projects.html" class="btn btn-secondary btn-sm">Full Directory</a>
+              <a href="admin.html" class="btn btn-primary btn-sm">+ Add Project</a>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code / Project Name</th>
+                  <th>Sector</th>
+                  <th>Budget (BAC)</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                  <th>Risk Score</th>
+                  <th>Contractor</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <!-- Dynamically populated via main.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('overview');
+
+      // Draw Charts
+      const highwayProj = PROJECTS_DATA[0];
+      drawSCurve('scurveCanvas', highwayProj.trajectory);
+      drawRiskDistribution('riskDistCanvas');
+
+      // Populate Table
+      const tbody = document.getElementById('projectsTableBody');
+      if (tbody) {
+        tbody.innerHTML = PROJECTS_DATA.map(p => `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--text-bright);">${p.name}</div>
+              <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">${p.code} • ${p.location}</div>
+            </td>
+            <td style="color: var(--text-muted);">${p.category}</td>
+            <td style="font-family: var(--font-mono); font-weight: 600;">₹${p.plannedCost} Cr</td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 70px; height: 6px; background: var(--bg-surface-3); border-radius: 3px; overflow: hidden;">
+                  <div style="width: ${p.physicalProgress}%; height: 100%; background: #38bdf8; border-radius: 3px;"></div>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: 0.75rem;">${p.physicalProgress}%</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge ${p.status === 'CRITICAL' ? 'badge-critical' : p.status === 'AT RISK' ? 'badge-at-risk' : p.status === 'WATCH' ? 'badge-watch' : 'badge-on-track'}">
+                ${p.status}
+              </span>
+            </td>
+            <td style="font-family: var(--font-mono); font-weight: 600; color: ${p.riskScore >= 75 ? '#f87171' : p.riskScore >= 50 ? '#facc15' : '#34d399'};">
+              ${p.riskScore}/100
+            </td>
+            <td style="color: var(--text-muted); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.contractor}</td>
+            <td>
+              <a href="project-detail.html" class="btn btn-secondary btn-sm">Inspect</a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      window.addEventListener('resize', () => {
+        drawSCurve('scurveCanvas', highwayProj.trajectory);
+        drawRiskDistribution('riskDistCanvas');
+      });
+    });
+  </script>
+</body>
+</html>

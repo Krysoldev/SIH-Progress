@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GIS Asset Map - Master Dev</title>
+  <link rel="stylesheet" href="assets/css/aurum.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #gisMap {
+      height: 600px;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border-medium);
+      background: #090b10;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #0f1218;
+      border: 1px solid rgba(226, 232, 240, 0.2);
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-family: var(--font-body);
+    }
+    .leaflet-popup-tip {
+      background: #0f1218;
+    }
+    .map-sidebar-list {
+      max-height: 600px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .map-asset-card {
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .map-asset-card:hover {
+      border-color: var(--border-bright);
+      background: var(--bg-surface-3);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="appSidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: #10b981;">
+            ● GIS Telemetry Service Active
+          </div>
+        </div>
+        <div class="header-right">
+          <a href="projects.html" class="btn btn-secondary btn-sm">Portfolio Directory</a>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+          <div class="page-header-top">
+            <div class="page-category-tag">
+              <span class="pulse-dot"></span>
+              <span>GEOSPATIAL RISK MONITORING</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">
+              CartoDB Dark Matter Basemap • 6 Spatial Assets
+            </div>
+          </div>
+          <h1 class="page-title">GIS ASSET MAP</h1>
+          <p class="page-subtitle">Interactive geographical spatial distribution and corridor risk tracking across India.</p>
+        </div>
+
+        <!-- 2 Columns: Map (8 cols) & Asset Quick List (4 cols) -->
+        <div class="grid-12">
+          <div class="col-8">
+            <div id="gisMap"></div>
+          </div>
+
+          <div class="col-4">
+            <div class="card" style="height: 100%;">
+              <div class="card-header">
+                <span class="card-title">Corridor Index</span>
+                <span class="badge badge-on-track">6 Geo-Nodes</span>
+              </div>
+              <div class="map-sidebar-list" id="mapAssetList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let mapInstance = null;
+    const markersMap = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSidebar('map');
+
+      // Initialize Leaflet Map centered over Central India
+      mapInstance = L.map('gisMap', {
+        center: [22.5, 78.5],
+        zoom: 5,
+        zoomControl: true
+      });
+
+      // CartoDB Dark Matter tiles
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 19
+      }).addTo(mapInstance);
+
+      // Render Markers
+      PROJECTS_DATA.forEach(p => {
+        const color = p.status === 'CRITICAL' ? '#ef4444' : p.status === 'AT RISK' ? '#f97316' : p.status === 'WATCH' ? '#eab308' : '#10b981';
+
+        const circleMarker = L.circleMarker([p.lat, p.lng], {
+          radius: 9,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2,
+          opacity: 0.9,
+          fillOpacity: 0.8
+        }).addTo(mapInstance);
+
+        const popupContent = `
+          <div style="font-family: var(--font-body); padding: 4px;">
+            <div style="font-weight: 700; color: #fff; font-size: 0.85rem; margin-bottom: 2px;">${p.name}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: #94a3b8; margin-bottom: 8px;">${p.code} • ${p.location}</div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px;">
+              <span>Budget: <strong>₹${p.plannedCost} Cr</strong></span>
+              <span>Progress: <strong>${p.physicalProgress}%</strong></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 10px;">
+              <span>Status: <strong style="color: ${color};">${p.status}</strong></span>
+              <span>Risk: <strong>${p.riskScore}/100</strong></span>
+            </div>
+            <a href="project-detail.html" style="display: block; text-align: center; background: #38bdf8; color: #000; padding: 5px 8px; border-radius: 4px; font-weight: 600; font-size: 0.72rem; text-decoration: none;">
+              Inspect Telemetry →
+            </a>
+          </div>
+        `;
+
+        circleMarker.bindPopup(popupContent);
+        markersMap[p.id] = circleMarker;
+      });
+
+      // Populate Quick List
+      const listEl = document.getElementById('mapAssetList');
+      listEl.innerHTML = PROJECTS_DATA.map(p => {
+        const color = p.status === 'CRITICAL' ? '#ef4444' : p.status === 'AT RISK' ? '#f97316' : p.status === 'WATCH' ? '#eab308' : '#10b981';
+        return `
+          <div class="map-asset-card" onclick="flyToAsset('${p.id}', ${p.lat}, ${p.lng})">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+              <span style="font-weight: 600; font-size: 0.82rem; color: var(--text-bright);">${p.name}</span>
+              <span class="badge" style="background: rgba(${p.status === 'CRITICAL' ? '239, 68, 68' : p.status === 'AT RISK' ? '249, 115, 22' : '16, 185, 129'}, 0.15); color: ${color}; border-color: ${color};">
+                ${p.status}
+              </span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted);">${p.location}</div>
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; margin-top: 6px;">
+              <span>Progress: ${p.physicalProgress}%</span>
+              <span>Risk: ${p.riskScore}/100</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    });
+
+    function flyToAsset(id, lat, lng) {
+      if (mapInstance && markersMap[id]) {
+        mapInstance.flyTo([lat, lng], 8, { duration: 1.2 });
+        setTimeout(() => {
+          markersMap[id].openPopup();
+        }, 1200);
+      }
+    }
+  </script>
+</body>
+</html>
